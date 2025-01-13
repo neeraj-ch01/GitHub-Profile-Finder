@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { authenticateUser } from '../services/authenticationService';
 import { MDBContainer, MDBCol, MDBRow, MDBBtn, MDBIcon, MDBInput, MDBCheckbox } from 'mdb-react-ui-kit';
 import { Link } from 'react-router-dom';
-import Navbar from './Navbar'; 
+import NavbarPage from './Navbar';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -50,13 +50,13 @@ const Login = () => {
 
   return (
     <>
-      <Navbar />
+    <NavbarPage/>
       <MDBContainer fluid className="p-3 my-5 h-custom">
         <MDBRow>
-          <MDBCol col='10' md='6'>
+          <MDBCol md='10' lg='6' >
             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" className="img-fluid" alt="Sample image" />
           </MDBCol>
-          <MDBCol col='4' md='6'>
+          <MDBCol md='10' lg='6'className='order-2 order-lg-1 d-flex flex-column align-items-center' >
             {message && <p className="alert alert-info">{message}</p>}
             <form onSubmit={handleSubmit}>
               <div className="d-flex flex-row align-items-center justify-content-center">
@@ -78,9 +78,9 @@ const Login = () => {
               <MDBInput wrapperClass='mb-4' label='Password' id='passwordInput' type='password' name='password' value={credentials.password} onChange={handleChange} size="lg" />
               <div className="d-flex justify-content-between mb-4">
                 <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
-                <a href="!#">Forgot password?</a>
+                <a href="!#" className='ms-2'>Forgot password?</a>
               </div>
-              <div className='text-center text-md-start mt-4 pt-2'>
+              <div className='text-center mt-4 pt-2'>
                 <MDBBtn className="mb-0 px-5" size='lg' type='submit'>Login</MDBBtn>
                 <p className="small fw-bold mt-2 pt-1 mb-2">Don't have an account? <Link to="/signup" className="link-danger">Register</Link></p>
               </div>
