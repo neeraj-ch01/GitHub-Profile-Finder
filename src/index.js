@@ -1,3 +1,11 @@
+import './styles.css'; //tailwind
+
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
+// Other imports and code
+
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
