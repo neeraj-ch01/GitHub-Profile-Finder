@@ -14,22 +14,24 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-    public User saveUser(User user){
+
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public Optional<User> findById(Long id){
+    public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
-    public Optional<User> findByEmail(String email){
+
+    public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public Boolean loginUser(String email, String password){
+    public Boolean loginUser(String email, String password) {
         Optional<User> userOptional = userRepository.findByEmail(email);
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if(user.getPassword().equals(password)){
+            if (user.getPassword().equals(password)) {
                 user.setLoggedIn(true);
                 userRepository.save(user);
                 return true;
@@ -38,14 +40,13 @@ public class UserService {
         return false;
     }
 
-    public void logoutUser(Long id){
+    public void logoutUser(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setLoggedIn(false);
             userRepository.save(user);
         }
     }
-
 
 }
