@@ -2,7 +2,6 @@ package com.trio.github_profile_finder_backend.Service;
 
 import com.trio.github_profile_finder_backend.Entity.User;
 import com.trio.github_profile_finder_backend.Repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
