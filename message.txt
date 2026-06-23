@@ -1,0 +1,22 @@
+refactor: decoupling service from database
+
+1. New Branch Created
+Checked out and switched to a new branch: backend-wrapper.
+
+2. Removed Obsolete Database and Auth Logic
+Deleted UserController.java and UserService.java, which contained login and signup logic.
+Deleted UserProfilePictureController.java and UserProfilePictureService.java, which handled downloading and saving profile images to a database.
+Eliminated all usage of the missing entity models (like User, UserRepo, UserDetails).
+
+3. Created DTOs (Data Transfer Objects)
+Added GithubUserProfileDTO.java to strongly type the GitHub profile data (mapping avatar_url, html_url, public_repos, followers, etc.).
+Added GithubRepoDTO.java to strongly type individual GitHub repositories (mapping name, html_url, description, stargazers_count, language, etc.).
+
+4. Simplified Service & Controller Layers
+User Details (/api/github/users/{userName}): UserDetailsService and UserDetailsController now instantly fetch and return the GithubUserProfileDTO from api.github.com.
+User Repositories (/api/github/users/{userName}/repos): UserRepoService and UserRepoController now instantly fetch and return a List<GithubRepoDTO> from api.github.com.
+
+Validation Results
+The project successfully compiled via mvn clean install.
+No compilation errors from the missing entities.
+Zero dependencies on lombok or database (Spring Data JPA) in the newly structured services.
