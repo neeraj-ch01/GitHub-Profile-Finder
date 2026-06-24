@@ -3,19 +3,21 @@ package com.trio.github_profile_finder_backend.Service;
 import com.trio.github_profile_finder_backend.DTOs.GithubSearchResponseDTO;
 import com.trio.github_profile_finder_backend.DTOs.GithubUserProfileDTO;
 import com.trio.github_profile_finder_backend.DTOs.GithubRepoDTO;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
+
+import java.net.URI;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class GithubSearchService {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final WebClient webClient = WebClient.create();
 
-    public GithubSearchResponseDTO<GithubUserProfileDTO> searchUsers(
+    public Mono<GithubSearchResponseDTO<GithubUserProfileDTO>> searchUsers(
             String name, String location, String language, String company, Integer minRepos, Integer page, Integer size) {
         
         StringBuilder query = new StringBuilder();
@@ -38,49 +40,70 @@ public class GithubSearchService {
 
         // If no query parameters were provided, return an empty result or generic search
         if (query.toString().trim().isEmpty()) {
-            return new GithubSearchResponseDTO<>();
+            return Mono.just(new GithubSearchResponseDTO<>());
         }
 
-        String url = UriComponentsBuilder.fromHttpUrl("https://api.github.com/search/users")
+        URI uri = UriComponentsBuilder.fromHttpUrl("https://api.github.com/search/users")
                 .queryParam("q", query.toString().trim())
                 .queryParam("page", page != null ? page : 1)
                 .queryParam("per_page", size != null ? size : 30)
-                .toUriString();
+                .build().encode().toUri();
 
-        try {
-            ResponseEntity<GithubSearchResponseDTO<GithubUserProfileDTO>> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<GithubSearchResponseDTO<GithubUserProfileDTO>>() {}
-            );
-            return response.getBody();
-        } catch (Exception e) {
-            return null;
-        }
+        return webClient.get()
+                .uri(uri)
+                .retrieve()
+                .bodyToMono(new org.springframework.core.ParameterizedTypeReference<GithubSearchResponseDTO<GithubUserProfileDTO>>() {})
+                .onErrorResume(e -> Mono.empty());
     }
 
-    public GithubSearchResponseDTO<GithubRepoDTO> searchRepositories(String queryStr, Integer page, Integer size) {
+    public Mono<GithubSearchResponseDTO<GithubRepoDTO>> searchRepositories(String queryStr, Integer page, Integer size) {
         if (queryStr == null || queryStr.trim().isEmpty()) {
-            return new GithubSearchResponseDTO<>();
+            return Mono.just(new GithubSearchResponseDTO<>());
         }
 
-        String url = UriComponentsBuilder.fromHttpUrl("https://api.github.com/search/repositories")
+        URI uri = UriComponentsBuilder.fromHttpUrl("https://api.github.com/search/repositories")
                 .queryParam("q", queryStr.trim())
                 .queryParam("page", page != null ? page : 1)
                 .queryParam("per_page", size != null ? size : 30)
-                .toUriString();
+                .build().encode().toUri();
 
-        try {
-            ResponseEntity<GithubSearchResponseDTO<GithubRepoDTO>> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<GithubSearchResponseDTO<GithubRepoDTO>>() {}
-            );
-            return response.getBody();
-        } catch (Exception e) {
-            return null;
+        return webClient.get()
+                .uri(uri)
+                .retrieve()
+                .bodyToMono(new org.springframework.core.ParameterizedTypeReference<GithubSearchResponseDTO<GithubRepoDTO>>() {})
+                .onErrorResume(e -> Mono.empty());
+    }
+
+    public Mono<GithubSearchResponseDTO<GithubRepoDTO>> getTrendingRepositories(String language, String since, Integer page, Integer size) {
+        LocalDate date = LocalDate.now();
+        if ("daily".equalsIgnoreCase(since)) {
+            date = date.minusDays(1);
+        } else if ("monthly".equalsIgnoreCase(since)) {
+            date = date.minusDays(30);
+        } else {
+            // default to weekly
+            date = date.minusDays(7);
         }
+
+        String formattedDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        StringBuilder query = new StringBuilder("created:>").append(formattedDate);
+        
+        if (language != null && !language.trim().isEmpty()) {
+            query.append(" language:").append(language.trim());
+        }
+
+        URI uri = UriComponentsBuilder.fromHttpUrl("https://api.github.com/search/repositories")
+                .queryParam("q", query.toString())
+                .queryParam("sort", "stars")
+                .queryParam("order", "desc")
+                .queryParam("page", page != null ? page : 1)
+                .queryParam("per_page", size != null ? size : 30)
+                .build().encode().toUri();
+
+        return webClient.get()
+                .uri(uri)
+                .retrieve()
+                .bodyToMono(new org.springframework.core.ParameterizedTypeReference<GithubSearchResponseDTO<GithubRepoDTO>>() {})
+                .onErrorResume(e -> Mono.empty());
     }
 }

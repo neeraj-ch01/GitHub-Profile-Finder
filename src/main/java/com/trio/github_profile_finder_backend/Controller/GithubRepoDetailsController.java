@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -23,38 +24,30 @@ public class GithubRepoDetailsController {
     private GithubRepoDetailsService githubRepoDetailsService;
 
     @GetMapping
-    public ResponseEntity<GithubRepoDTO> getRepositoryDetails(@PathVariable String owner, @PathVariable String repo) {
-        GithubRepoDTO repoDetails = githubRepoDetailsService.getRepositoryDetails(owner, repo);
-        if (repoDetails != null) {
-            return new ResponseEntity<>(repoDetails, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public Mono<ResponseEntity<GithubRepoDTO>> getRepositoryDetails(@PathVariable String owner, @PathVariable String repo) {
+        return githubRepoDetailsService.getRepositoryDetails(owner, repo)
+                .map(repoDetails -> new ResponseEntity<>(repoDetails, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/issues")
-    public ResponseEntity<List<GithubIssueDTO>> getRepositoryIssues(@PathVariable String owner, @PathVariable String repo) {
-        List<GithubIssueDTO> issues = githubRepoDetailsService.getRepositoryIssues(owner, repo);
-        if (issues != null) {
-            return new ResponseEntity<>(issues, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public Mono<ResponseEntity<List<GithubIssueDTO>>> getRepositoryIssues(@PathVariable String owner, @PathVariable String repo) {
+        return githubRepoDetailsService.getRepositoryIssues(owner, repo)
+                .map(issues -> new ResponseEntity<>(issues, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/commits")
-    public ResponseEntity<List<GithubCommitDTO>> getRepositoryCommits(@PathVariable String owner, @PathVariable String repo) {
-        List<GithubCommitDTO> commits = githubRepoDetailsService.getRepositoryCommits(owner, repo);
-        if (commits != null) {
-            return new ResponseEntity<>(commits, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public Mono<ResponseEntity<List<GithubCommitDTO>>> getRepositoryCommits(@PathVariable String owner, @PathVariable String repo) {
+        return githubRepoDetailsService.getRepositoryCommits(owner, repo)
+                .map(commits -> new ResponseEntity<>(commits, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/branches")
-    public ResponseEntity<List<GithubBranchDTO>> getRepositoryBranches(@PathVariable String owner, @PathVariable String repo) {
-        List<GithubBranchDTO> branches = githubRepoDetailsService.getRepositoryBranches(owner, repo);
-        if (branches != null) {
-            return new ResponseEntity<>(branches, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public Mono<ResponseEntity<List<GithubBranchDTO>>> getRepositoryBranches(@PathVariable String owner, @PathVariable String repo) {
+        return githubRepoDetailsService.getRepositoryBranches(owner, repo)
+                .map(branches -> new ResponseEntity<>(branches, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

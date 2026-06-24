@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 public class UserDetailsController {
@@ -16,12 +17,9 @@ public class UserDetailsController {
     private UserDetailsService userDetailsService;
 
     @GetMapping("/api/github/users/{userName}")
-    public ResponseEntity<GithubUserProfileDTO> getUserDetails(@PathVariable String userName) {
-        GithubUserProfileDTO userDetails = userDetailsService.fetchUserDetails(userName);
-
-        if (userDetails != null) {
-            return new ResponseEntity<>(userDetails, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public Mono<ResponseEntity<GithubUserProfileDTO>> getUserDetails(@PathVariable String userName) {
+        return userDetailsService.fetchUserDetails(userName)
+                .map(userDetails -> new ResponseEntity<>(userDetails, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
