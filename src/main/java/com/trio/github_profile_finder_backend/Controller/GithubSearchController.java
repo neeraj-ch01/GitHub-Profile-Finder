@@ -51,4 +51,18 @@ public class GithubSearchController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+    @GetMapping("/trending-repositories")
+    public ResponseEntity<GithubSearchResponseDTO<GithubRepoDTO>> getTrendingRepositories(
+            @RequestParam(required = false) String language,
+            @RequestParam(required = false, defaultValue = "weekly") String since,
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "30") Integer size) {
+
+        GithubSearchResponseDTO<GithubRepoDTO> results = githubSearchService.getTrendingRepositories(language, since, page, size);
+
+        if (results != null) {
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

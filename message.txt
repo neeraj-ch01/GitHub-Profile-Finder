@@ -1,30 +1,5 @@
-feat: github wrapper APIs
+feat(search): add trending repositories endpoint and fix URI encoding
 
-1. Unified Search Endpoint
-Instead of hardcoding a dozen different endpoints for every possible search combination, a single, flexible search controller was created:
-
-GET /api/github/search/users
-
-Parameters: name, location, language, company, minRepos, page, size.
-Example: /api/github/search/users?name=john&location=san+francisco&language=java&page=1&size=30
-Note: It automatically builds the GitHub q=... string internally.
-
-GET /api/github/search/repositories
-
-Parameters: q (search query), page, size.
-
-2. Repository Details Endpoints
-added a new controller to fetch specific details for any repository:
-
-GET /api/github/repos/{owner}/{repo} (Repo details)
-GET /api/github/repos/{owner}/{repo}/issues (Open issues)
-GET /api/github/repos/{owner}/{repo}/commits (Commit history)
-GET /api/github/repos/{owner}/{repo}/branches (Branch list)
-
-3. Strongly-Typed Data Transfer Objects (DTOs)
-To keep the backend responses structured, we mapped the incoming GitHub JSON into clean Java Objects:
-
-GithubSearchResponseDTO (Handles the generic search pagination wrapper)
-GithubIssueDTO
-GithubCommitDTO
-GithubBranchDTO
+- Implemented `/api/github/search/trending-repositories` in `GithubSearchController`.
+- Added `getTrendingRepositories(language, since, page, size)` to `GithubSearchService` to fetch repositories dynamically based on creation date (daily, weekly, monthly) sorted by stars.
+- Fixed a bug where `RestTemplate` was double-encoding the query string by changing URL representations from raw `String` to properly built `java.net.URI` instances. This prevents `UriTemplateHandler` from improperly parsing search strings containing special characters like `>` and spaces.

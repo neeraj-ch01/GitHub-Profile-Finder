@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Service
 public class GithubSearchService {
 
@@ -41,15 +45,15 @@ public class GithubSearchService {
             return new GithubSearchResponseDTO<>();
         }
 
-        String url = UriComponentsBuilder.fromHttpUrl("https://api.github.com/search/users")
+        URI uri = UriComponentsBuilder.fromHttpUrl("https://api.github.com/search/users")
                 .queryParam("q", query.toString().trim())
                 .queryParam("page", page != null ? page : 1)
                 .queryParam("per_page", size != null ? size : 30)
-                .toUriString();
+                .build().encode().toUri();
 
         try {
             ResponseEntity<GithubSearchResponseDTO<GithubUserProfileDTO>> response = restTemplate.exchange(
-                    url,
+                    uri,
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<GithubSearchResponseDTO<GithubUserProfileDTO>>() {}
@@ -65,15 +69,54 @@ public class GithubSearchService {
             return new GithubSearchResponseDTO<>();
         }
 
-        String url = UriComponentsBuilder.fromHttpUrl("https://api.github.com/search/repositories")
+        URI uri = UriComponentsBuilder.fromHttpUrl("https://api.github.com/search/repositories")
                 .queryParam("q", queryStr.trim())
                 .queryParam("page", page != null ? page : 1)
                 .queryParam("per_page", size != null ? size : 30)
-                .toUriString();
+                .build().encode().toUri();
 
         try {
             ResponseEntity<GithubSearchResponseDTO<GithubRepoDTO>> response = restTemplate.exchange(
-                    url,
+                    uri,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<GithubSearchResponseDTO<GithubRepoDTO>>() {}
+            );
+            return response.getBody();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public GithubSearchResponseDTO<GithubRepoDTO> getTrendingRepositories(String language, String since, Integer page, Integer size) {
+        LocalDate date = LocalDate.now();
+        if ("daily".equalsIgnoreCase(since)) {
+            date = date.minusDays(1);
+        } else if ("monthly".equalsIgnoreCase(since)) {
+            date = date.minusDays(30);
+        } else {
+            // default to weekly
+            date = date.minusDays(7);
+        }
+
+        String formattedDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        StringBuilder query = new StringBuilder("created:>").append(formattedDate);
+        
+        if (language != null && !language.trim().isEmpty()) {
+            query.append(" language:").append(language.trim());
+        }
+
+        URI uri = UriComponentsBuilder.fromHttpUrl("https://api.github.com/search/repositories")
+                .queryParam("q", query.toString())
+                .queryParam("sort", "stars")
+                .queryParam("order", "desc")
+                .queryParam("page", page != null ? page : 1)
+                .queryParam("per_page", size != null ? size : 30)
+                .build().encode().toUri();
+
+        try {
+            ResponseEntity<GithubSearchResponseDTO<GithubRepoDTO>> response = restTemplate.exchange(
+                    uri,
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<GithubSearchResponseDTO<GithubRepoDTO>>() {}
