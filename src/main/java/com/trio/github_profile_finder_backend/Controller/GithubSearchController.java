@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/github/search")
@@ -20,7 +21,7 @@ public class GithubSearchController {
     private GithubSearchService githubSearchService;
 
     @GetMapping("/users")
-    public ResponseEntity<GithubSearchResponseDTO<GithubUserProfileDTO>> searchUsers(
+    public Mono<ResponseEntity<GithubSearchResponseDTO<GithubUserProfileDTO>>> searchUsers(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String language,
@@ -29,40 +30,30 @@ public class GithubSearchController {
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "30") Integer size) {
 
-        GithubSearchResponseDTO<GithubUserProfileDTO> results = githubSearchService.searchUsers(
-                name, location, language, company, minRepos, page, size);
-
-        if (results != null) {
-            return new ResponseEntity<>(results, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return githubSearchService.searchUsers(name, location, language, company, minRepos, page, size)
+                .map(results -> new ResponseEntity<>(results, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
     @GetMapping("/repositories")
-    public ResponseEntity<GithubSearchResponseDTO<GithubRepoDTO>> searchRepositories(
+    public Mono<ResponseEntity<GithubSearchResponseDTO<GithubRepoDTO>>> searchRepositories(
             @RequestParam String q,
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "30") Integer size) {
 
-        GithubSearchResponseDTO<GithubRepoDTO> results = githubSearchService.searchRepositories(q, page, size);
-
-        if (results != null) {
-            return new ResponseEntity<>(results, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return githubSearchService.searchRepositories(q, page, size)
+                .map(results -> new ResponseEntity<>(results, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
     @GetMapping("/trending-repositories")
-    public ResponseEntity<GithubSearchResponseDTO<GithubRepoDTO>> getTrendingRepositories(
+    public Mono<ResponseEntity<GithubSearchResponseDTO<GithubRepoDTO>>> getTrendingRepositories(
             @RequestParam(required = false) String language,
             @RequestParam(required = false, defaultValue = "weekly") String since,
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "30") Integer size) {
 
-        GithubSearchResponseDTO<GithubRepoDTO> results = githubSearchService.getTrendingRepositories(language, since, page, size);
-
-        if (results != null) {
-            return new ResponseEntity<>(results, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return githubSearchService.getTrendingRepositories(language, since, page, size)
+                .map(results -> new ResponseEntity<>(results, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 }

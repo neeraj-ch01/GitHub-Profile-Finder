@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -18,12 +19,9 @@ public class UserRepoController {
     private UserRepoService userRepoService;
 
     @GetMapping("/api/github/users/{userName}/repos")
-    public ResponseEntity<List<GithubRepoDTO>> getUserRepositories(@PathVariable String userName) {
-        List<GithubRepoDTO> repositories = userRepoService.fetchUserRepositories(userName);
-        
-        if (repositories != null) {
-            return new ResponseEntity<>(repositories, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public Mono<ResponseEntity<List<GithubRepoDTO>>> getUserRepositories(@PathVariable String userName) {
+        return userRepoService.fetchUserRepositories(userName)
+                .map(repositories -> new ResponseEntity<>(repositories, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

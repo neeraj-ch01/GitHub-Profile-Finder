@@ -1,5 +1,11 @@
-feat(search): add trending repositories endpoint and fix URI encoding
+refactor: reactive architecture
 
-- Implemented `/api/github/search/trending-repositories` in `GithubSearchController`.
-- Added `getTrendingRepositories(language, since, page, size)` to `GithubSearchService` to fetch repositories dynamically based on creation date (daily, weekly, monthly) sorted by stars.
-- Fixed a bug where `RestTemplate` was double-encoding the query string by changing URL representations from raw `String` to properly built `java.net.URI` instances. This prevents `UriTemplateHandler` from improperly parsing search strings containing special characters like `>` and spaces.
+Removed Standard MVC Dependencies: spring-boot-starter-web (including embedded Tomcat) was successfully commented out in pom.xml. The application now natively uses spring-boot-starter-webflux with a lightweight Netty server.
+
+Replaced RestTemplate with WebClient: Across all of our services (GithubSearchService, GithubRepoDetailsService, UserDetailsService, and UserRepoService), the legacy synchronous RestTemplate calls were replaced with the asynchronous and fluent WebClient API.
+
+Refactored Controllers to Return Reactive Types: Every REST Controller endpoint was updated to return Mono<ResponseEntity<T>>. This natively plugs into WebFlux to process asynchronous sequences without blocking any threads, yielding high-performance concurrency.
+
+CORS Configuration Updated: The WebConfig.java was updated from WebMvcConfigurer to WebFluxConfigurer to ensure we maintain our local CORS mappings properly in WebFlux.
+
+Passed Maven Tests: The project was fully compiled (mvn clean install), and the test cases successfully ran against our new architecture.
