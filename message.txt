@@ -1,22 +1,30 @@
-refactor: decoupling service from database
+feat: github wrapper APIs
 
-1. New Branch Created
-Checked out and switched to a new branch: backend-wrapper.
+1. Unified Search Endpoint
+Instead of hardcoding a dozen different endpoints for every possible search combination, a single, flexible search controller was created:
 
-2. Removed Obsolete Database and Auth Logic
-Deleted UserController.java and UserService.java, which contained login and signup logic.
-Deleted UserProfilePictureController.java and UserProfilePictureService.java, which handled downloading and saving profile images to a database.
-Eliminated all usage of the missing entity models (like User, UserRepo, UserDetails).
+GET /api/github/search/users
 
-3. Created DTOs (Data Transfer Objects)
-Added GithubUserProfileDTO.java to strongly type the GitHub profile data (mapping avatar_url, html_url, public_repos, followers, etc.).
-Added GithubRepoDTO.java to strongly type individual GitHub repositories (mapping name, html_url, description, stargazers_count, language, etc.).
+Parameters: name, location, language, company, minRepos, page, size.
+Example: /api/github/search/users?name=john&location=san+francisco&language=java&page=1&size=30
+Note: It automatically builds the GitHub q=... string internally.
 
-4. Simplified Service & Controller Layers
-User Details (/api/github/users/{userName}): UserDetailsService and UserDetailsController now instantly fetch and return the GithubUserProfileDTO from api.github.com.
-User Repositories (/api/github/users/{userName}/repos): UserRepoService and UserRepoController now instantly fetch and return a List<GithubRepoDTO> from api.github.com.
+GET /api/github/search/repositories
 
-Validation Results
-The project successfully compiled via mvn clean install.
-No compilation errors from the missing entities.
-Zero dependencies on lombok or database (Spring Data JPA) in the newly structured services.
+Parameters: q (search query), page, size.
+
+2. Repository Details Endpoints
+added a new controller to fetch specific details for any repository:
+
+GET /api/github/repos/{owner}/{repo} (Repo details)
+GET /api/github/repos/{owner}/{repo}/issues (Open issues)
+GET /api/github/repos/{owner}/{repo}/commits (Commit history)
+GET /api/github/repos/{owner}/{repo}/branches (Branch list)
+
+3. Strongly-Typed Data Transfer Objects (DTOs)
+To keep the backend responses structured, we mapped the incoming GitHub JSON into clean Java Objects:
+
+GithubSearchResponseDTO (Handles the generic search pagination wrapper)
+GithubIssueDTO
+GithubCommitDTO
+GithubBranchDTO
