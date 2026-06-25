@@ -1,7 +1,9 @@
 package com.trio.github_profile_finder_backend.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GithubReadmeDTO {
     private String name;
     private String path;

@@ -11,13 +11,13 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class GithubSearchService {
 
-    private final WebClient webClient = WebClient.builder()
-            .defaultHeader("User-Agent", "GithubProfileFinderApp")
-            .build();
+    @Autowired
+    private WebClient webClient;
 
     public Mono<GithubSearchResponseDTO<GithubUserProfileDTO>> searchUsers(
             String name, String location, String language, String company, Integer minRepos, Integer page, Integer size) {

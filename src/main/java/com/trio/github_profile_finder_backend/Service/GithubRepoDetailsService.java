@@ -11,13 +11,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class GithubRepoDetailsService {
 
-    private final WebClient webClient = WebClient.builder()
-            .defaultHeader("User-Agent", "GithubProfileFinderApp")
-            .build();
+    @Autowired
+    private WebClient webClient;
     private final String GITHUB_API_URL = "https://api.github.com/repos/";
 
     public Mono<GithubRepoDTO> getRepositoryDetails(String owner, String repo) {
@@ -26,7 +26,10 @@ public class GithubRepoDetailsService {
                 .uri(url)
                 .retrieve()
                 .bodyToMono(GithubRepoDTO.class)
-                .onErrorResume(e -> Mono.empty());
+                .onErrorResume(e -> {
+                    e.printStackTrace();
+                    return Mono.empty();
+                });
     }
 
     public Mono<List<GithubIssueDTO>> getRepositoryIssues(String owner, String repo) {
@@ -35,7 +38,10 @@ public class GithubRepoDetailsService {
                 .uri(url)
                 .retrieve()
                 .bodyToMono(new org.springframework.core.ParameterizedTypeReference<List<GithubIssueDTO>>() {})
-                .onErrorResume(e -> Mono.empty());
+                .onErrorResume(e -> {
+                    e.printStackTrace();
+                    return Mono.empty();
+                });
     }
 
     public Mono<List<GithubCommitDTO>> getRepositoryCommits(String owner, String repo) {
@@ -44,7 +50,10 @@ public class GithubRepoDetailsService {
                 .uri(url)
                 .retrieve()
                 .bodyToMono(new org.springframework.core.ParameterizedTypeReference<List<GithubCommitDTO>>() {})
-                .onErrorResume(e -> Mono.empty());
+                .onErrorResume(e -> {
+                    e.printStackTrace();
+                    return Mono.empty();
+                });
     }
 
     public Mono<List<GithubBranchDTO>> getRepositoryBranches(String owner, String repo) {
@@ -53,7 +62,10 @@ public class GithubRepoDetailsService {
                 .uri(url)
                 .retrieve()
                 .bodyToMono(new org.springframework.core.ParameterizedTypeReference<List<GithubBranchDTO>>() {})
-                .onErrorResume(e -> Mono.empty());
+                .onErrorResume(e -> {
+                    e.printStackTrace();
+                    return Mono.empty();
+                });
     }
 
     public Mono<GithubReadmeDTO> getRepositoryReadme(String owner, String repo) {
@@ -62,7 +74,10 @@ public class GithubRepoDetailsService {
                 .uri(url)
                 .retrieve()
                 .bodyToMono(GithubReadmeDTO.class)
-                .onErrorResume(e -> Mono.empty());
+                .onErrorResume(e -> {
+                    e.printStackTrace();
+                    return Mono.empty();
+                });
     }
 
     public Mono<Map<String, Long>> getRepositoryLanguages(String owner, String repo) {
@@ -71,6 +86,9 @@ public class GithubRepoDetailsService {
                 .uri(url)
                 .retrieve()
                 .bodyToMono(new org.springframework.core.ParameterizedTypeReference<Map<String, Long>>() {})
-                .onErrorResume(e -> Mono.empty());
+                .onErrorResume(e -> {
+                    e.printStackTrace();
+                    return Mono.empty();
+                });
     }
 }
