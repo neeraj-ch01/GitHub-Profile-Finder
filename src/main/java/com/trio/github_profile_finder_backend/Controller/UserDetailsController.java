@@ -22,4 +22,11 @@ public class UserDetailsController {
                 .map(userDetails -> new ResponseEntity<>(userDetails, HttpStatus.OK))
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @GetMapping("/api/github/users/{userName}/events")
+    public Mono<ResponseEntity<java.util.List<com.trio.github_profile_finder_backend.DTOs.GithubEventDTO>>> getUserEvents(@PathVariable String userName) {
+        return userDetailsService.fetchUserEvents(userName)
+                .map(events -> new ResponseEntity<>(events, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }

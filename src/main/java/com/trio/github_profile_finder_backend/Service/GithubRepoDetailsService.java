@@ -4,6 +4,8 @@ import com.trio.github_profile_finder_backend.DTOs.GithubRepoDTO;
 import com.trio.github_profile_finder_backend.DTOs.GithubIssueDTO;
 import com.trio.github_profile_finder_backend.DTOs.GithubCommitDTO;
 import com.trio.github_profile_finder_backend.DTOs.GithubBranchDTO;
+import com.trio.github_profile_finder_backend.DTOs.GithubReadmeDTO;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -49,6 +51,24 @@ public class GithubRepoDetailsService {
                 .uri(url)
                 .retrieve()
                 .bodyToMono(new org.springframework.core.ParameterizedTypeReference<List<GithubBranchDTO>>() {})
+                .onErrorResume(e -> Mono.empty());
+    }
+
+    public Mono<GithubReadmeDTO> getRepositoryReadme(String owner, String repo) {
+        String url = GITHUB_API_URL + owner + "/" + repo + "/readme";
+        return webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(GithubReadmeDTO.class)
+                .onErrorResume(e -> Mono.empty());
+    }
+
+    public Mono<Map<String, Long>> getRepositoryLanguages(String owner, String repo) {
+        String url = GITHUB_API_URL + owner + "/" + repo + "/languages";
+        return webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(new org.springframework.core.ParameterizedTypeReference<Map<String, Long>>() {})
                 .onErrorResume(e -> Mono.empty());
     }
 }

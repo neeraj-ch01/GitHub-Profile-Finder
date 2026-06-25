@@ -43,3 +43,34 @@ Since the search APIs are paginated, the frontend should implement:
 
 ## Next Steps
 Once the backend APIs are finalized, the frontend team can mock these endpoints during initial UI development, mapping the JSON responses directly to state management (e.g., Redux, Context API, or React Query).
+
+---
+
+## UI Mockup & Endpoint Mapping
+Based on the provided frontend mockups, here is how the views map to our implemented API endpoints:
+
+### 1. Landing Page (Home)
+- **Hero Section**: "Unlock GitHub Insights with Ease" - Static introductory content. The "Get Started Now" button will route the user to the Search Profiles page.
+- **Trending Showcase (Suggested addition)**: We can use our newly created `GET /api/github/search/trending-repositories` endpoint to display a live "Trending Repositories" ticker or carousel directly on the home page.
+- **Powerful Features Cards**:
+  - **Profile Search**: Routes to the Search view.
+  - **Repo Explorer**: Highlights the `/api/github/users/{userName}/repos` capabilities.
+  - **Rich Analytics**: Teases analytical charts (see "Missing APIs" below for how to support this).
+  - **Git & GitHub Tutorials**: Can be a static curated page of embedded YouTube tutorials.
+
+### 2. Search Profiles Page
+The search page offers two distinct UX paths:
+- **"Search by Name"**: This will hit `GET /api/github/search/users?name={query}`. We can also integrate our advanced query parameters here (location, language, etc.) for a robust search experience.
+- **"Search by GitHub Username"**: This will attempt to directly fetch `GET /api/github/users/{userName}`. If the user exists, we instantly bypass the search results and route them to their Profile Dashboard.
+
+## Identified Missing APIs & Scope Expansion
+After reviewing the planned features (like "Rich Analytics" and "Readme" rendering), we are currently missing a few crucial endpoints on the backend to fulfill the UI's promises:
+
+1. **Repository Readme Endpoint (`GET /api/github/repos/{owner}/{repo}/readme`)**:
+   - **Why we need it**: The "Overview" tab in the Repository Deep-Dive is supposed to render the README. We need an endpoint that calls the GitHub API and returns the raw Markdown or Base64 encoded content of the README file.
+2. **Repository Languages Endpoint (`GET /api/github/repos/{owner}/{repo}/languages`)**:
+   - **Why we need it**: The mockups mention "Rich Analytics" including "language distribution". GitHub provides an endpoint that returns the exact byte count of every programming language used in a repository. This is perfect for rendering beautiful Doughnut/Pie charts on the frontend using Chart.js or Recharts.
+3. **User Recent Events / Activity (`GET /api/github/users/{userName}/events`)**:
+   - **Why we need it**: To generate "contribution heatmaps" or an "Activity Feed", we need to fetch the user's recent public events (PushEvents, PullRequestEvents, etc.) from GitHub.
+
+**Recommendation**: Before we transition fully to building the React frontend, we should quickly implement these 3 missing backend endpoints to ensure our frontend has all the data it needs to be truly "premium" and "rich".
