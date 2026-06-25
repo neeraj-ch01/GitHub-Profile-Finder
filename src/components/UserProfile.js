@@ -43,7 +43,7 @@ const UserProfile = () => {
 
   // Helper to format GitHub Event items
   const renderEventDescription = (event) => {
-    const repoName = event.repoName;
+    const repoName = event.repo?.name || "unknown/repository";
     const repoLink = `/repos/${repoName}`;
     const dateStr = new Date(event.createdAt).toLocaleDateString(undefined, {
       month: "short",
