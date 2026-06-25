@@ -12,9 +12,9 @@ const Tutorials = () => {
       level: "Beginner"
     },
     {
-      id: "apGV9Ad7XYY", // Advanced Git
-      title: "Git Branching, Merging, & Rebasing",
-      channel: "The Net Ninja",
+      id: "f1wnYdLEpgI", // Advanced Git
+      title: "Git Tutorial: Branching and Merging",
+      channel: "Corey Schafer",
       description: "A deep dive into branching structures, fast-forward merges, 3-way merges, rebasing, and resolving merge conflicts without losing work.",
       duration: "18 mins",
       level: "Intermediate"
