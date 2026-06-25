@@ -11,6 +11,9 @@ public class WebConfig implements WebFluxConfigurer {
     @Value("${FRONTEND_URL}")
     private String frontendUrl;
 
+    @Value("${GITHUB_TOKEN}")
+    private String githubToken;
+
     @Override
     public void addCorsMappings(@org.springframework.lang.NonNull CorsRegistry registry) {
         registry.addMapping("/**")
@@ -18,5 +21,18 @@ public class WebConfig implements WebFluxConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
+    }
+
+    @org.springframework.context.annotation.Bean
+    public org.springframework.web.reactive.function.client.WebClient githubWebClient() {
+        org.springframework.web.reactive.function.client.WebClient.Builder builder = org.springframework.web.reactive.function.client.WebClient
+                .builder()
+                .defaultHeader("User-Agent", "GithubProfileFinderApp");
+
+        if (githubToken != null && !githubToken.trim().isEmpty()) {
+            builder.defaultHeader("Authorization", "Bearer " + githubToken.trim());
+        }
+
+        return builder.build();
     }
 }

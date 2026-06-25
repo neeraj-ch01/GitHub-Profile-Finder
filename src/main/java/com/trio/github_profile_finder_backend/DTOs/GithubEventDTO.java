@@ -1,8 +1,10 @@
 package com.trio.github_profile_finder_backend.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Map;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GithubEventDTO {
     private String id;
     private String type;

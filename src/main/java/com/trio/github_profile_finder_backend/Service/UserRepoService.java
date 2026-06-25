@@ -6,13 +6,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class UserRepoService {
 
-    private final WebClient webClient = WebClient.builder()
-            .defaultHeader("User-Agent", "GithubProfileFinderApp")
-            .build();
+    @Autowired
+    private WebClient webClient;
 
     public Mono<List<GithubRepoDTO>> fetchUserRepositories(String userName) {
         String url = "https://api.github.com/users/" + userName + "/repos";
