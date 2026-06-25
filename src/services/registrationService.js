@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL 
   ? `${process.env.REACT_APP_API_BASE_URL}/api/users` 
@@ -6,7 +6,7 @@ const BASE_URL = process.env.REACT_APP_API_BASE_URL
 
 export const registerUser = async (userData) => {
     try{
-        const reponse = await axios.post(`${BASE_URL}/register`, userData);
+        const reponse = await apiClient.post(`${BASE_URL}/register`, userData);
         return reponse.data;
     }catch(error){
         console.error('Error while registering user: ',error);

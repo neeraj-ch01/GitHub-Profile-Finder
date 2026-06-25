@@ -246,7 +246,7 @@ const UserProfile = () => {
               <div className="bg-gray-850 border border-gray-750/30 rounded-2xl p-5 shadow-lg text-center">
                 <span className="block text-xs uppercase tracking-wider text-gray-450 font-bold">Public Repos</span>
                 <span className="text-3xl font-black text-white mt-1 block">
-                  {profile.publicRepos}
+                  {profile.public_repos}
                 </span>
               </div>
               <div className="bg-gray-850 border border-gray-750/30 rounded-2xl p-5 shadow-lg text-center">

@@ -1,8 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { marked } from "marked";
+import mermaid from "mermaid";
 import Navbar from "./Navbar";
 import githubService from "../services/githubService";
+
+mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+
+const escapeHtml = (text) => {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
+marked.use({
+  renderer: {
+    code(token) {
+      const code = token.text;
+      const lang = token.lang || "";
+      if (lang === "mermaid") {
+        return `<div class="mermaid">${escapeHtml(code)}</div>`;
+      }
+      return false;
+    }
+  }
+});
 
 const LANGUAGE_COLORS = {
   JavaScript: "#f1e05a",
@@ -46,6 +71,39 @@ const decodeReadme = (readmeDto) => {
     }
   }
   return readmeDto.content;
+};
+
+const transformMarkdownUrls = (md, repoOwner, repoName, downloadUrl) => {
+  if (!md) return "";
+  
+  let baseUrl = "";
+  if (downloadUrl) {
+    baseUrl = downloadUrl.substring(0, downloadUrl.lastIndexOf("/") + 1);
+  } else {
+    baseUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/master/`;
+  }
+  
+  const resolveRelativeUrl = (base, relativePath) => {
+    if (!relativePath) return "";
+    let cleanPath = relativePath;
+    if (cleanPath.startsWith("./")) {
+      cleanPath = cleanPath.substring(2);
+    }
+    if (cleanPath.startsWith("/")) {
+      cleanPath = cleanPath.substring(1);
+    }
+    return `${base}${cleanPath}`;
+  };
+
+  let result = md.replace(/!\[([^\]]*)\]\((?!https?:\/\/|#|data:)([^)]+)\)/g, (match, alt, path) => {
+    return `![${alt}](${resolveRelativeUrl(baseUrl, path)})`;
+  });
+
+  result = result.replace(/<img([^>]*)\bsrc=["'](?!https?:\/\/|#|data:)([^"']+)["']/gi, (match, attrs, path) => {
+    return `<img${attrs}src="${resolveRelativeUrl(baseUrl, path)}"`;
+  });
+  
+  return result;
 };
 
 const RepoDetail = () => {
@@ -126,6 +184,21 @@ const RepoDetail = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, repo, owner, repoName]);
 
+  // Run mermaid rendering after markdown is injected
+  useEffect(() => {
+    if (activeTab === "overview" && readme) {
+      const renderMermaid = async () => {
+        try {
+          await mermaid.run({ querySelector: '.mermaid' });
+        } catch (e) {
+          console.warn("Mermaid rendering failed:", e);
+        }
+      };
+      const timer = setTimeout(renderMermaid, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [activeTab, readme]);
+
   // Calculations for Language distribution
   const renderLanguagesBar = () => {
     if (!languages || Object.keys(languages).length === 0) return null;
@@ -199,11 +272,12 @@ const RepoDetail = () => {
           );
         }
         try {
-          const rawMarkdown = decodeReadme(readme);
+          let rawMarkdown = decodeReadme(readme);
+          rawMarkdown = transformMarkdownUrls(rawMarkdown, owner, repoName, readme.download_url);
           const html = marked.parse(rawMarkdown);
           return (
             <div
-              className="p-8 prose prose-invert max-w-none text-gray-300 break-words"
+              className="p-8 prose prose-invert max-w-none text-gray-300 break-words mermaid-container"
               dangerouslySetInnerHTML={{ __html: html }}
             />
           );

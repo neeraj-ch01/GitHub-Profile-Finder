@@ -1,8 +1,18 @@
-fix: add optional chaining and update broken video IDs
+Enhance Markdown rendering, centralize API client, and fix UI data binding
 
-1. The frontend was crashing on the homepage when reading `repo.owner.login` because some repositories returned from the backend had a missing owner. 
-2. The Kent C. Dodds and TechWorld with Nana videos on the Tutorials page were returning "Video unavailable" due to restricted embeds.
+This commit introduces several frontend improvements ranging from better 
+Markdown display in repository details to improved API request logging.
 
-Changes done:
-- Added optional chaining (`repo.owner?.login` and `repo.owner?.avatar_url`) in `HomePage.js` to prevent React runtime crashes when data is missing.
-- Updated the broken video IDs in `Tutorials.js` to fully functional ones that support external embedding.
+- Added `apiClient.js` to provide a centralized Axios instance with 
+  request and response interceptors for consistent frontend logging.
+- Refactored `authenticationService`, `githubService`, and 
+  `registrationService` to use the new `apiClient`.
+- Implemented Mermaid.js integration to support flowchart and diagram 
+  rendering within GitHub README files. Added responsive CSS rules 
+  to prevent diagrams from distorting layout.
+- Enhanced the Markdown renderer to resolve relative image URLs by 
+  injecting the GitHub `download_url` for raw assets, fixing broken 
+  images in repository READMEs.
+- Fixed a data binding issue in `UserProfile.js` where `public_repos` 
+  was incorrectly referenced as `publicRepos`.
+- Added `mermaid` dependency to `package.json`.

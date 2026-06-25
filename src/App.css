@@ -179,3 +179,17 @@
 .text-red-555 {
   color: #ef4444;
 }
+
+/* Mermaid Diagrams styling */
+.mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+  background: transparent;
+  width: 100%;
+}
+
+.mermaid svg {
+  max-width: 100% !important;
+  height: auto !important;
+}

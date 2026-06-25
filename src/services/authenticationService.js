@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL 
   ? `${process.env.REACT_APP_API_BASE_URL}/api/users` 
@@ -6,7 +6,7 @@ const BASE_URL = process.env.REACT_APP_API_BASE_URL
 
 export const authenticateUser = async(credentials)=>{
     try{
-        const response = await axios.post(`${BASE_URL}/login`, credentials);
+        const response = await apiClient.post(`${BASE_URL}/login`, credentials);
         return response.data;
     }catch(error){
         console.error('Error during login: ', error);
