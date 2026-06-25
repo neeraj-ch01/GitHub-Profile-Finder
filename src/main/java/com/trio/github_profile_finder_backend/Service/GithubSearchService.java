@@ -15,7 +15,9 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class GithubSearchService {
 
-    private final WebClient webClient = WebClient.create();
+    private final WebClient webClient = WebClient.builder()
+            .defaultHeader("User-Agent", "GithubProfileFinderApp")
+            .build();
 
     public Mono<GithubSearchResponseDTO<GithubUserProfileDTO>> searchUsers(
             String name, String location, String language, String company, Integer minRepos, Integer page, Integer size) {

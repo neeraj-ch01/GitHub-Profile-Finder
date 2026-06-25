@@ -1,8 +1,9 @@
-feat: add comprehensive profile analytics and overview endpoints
+fix: add User-Agent header for GitHub API calls
 
-- feat: create GithubReadmeDTO and GithubEventDTO to represent new GitHub API responses.
-- feat: add /api/github/repos/{owner}/{repo}/readme endpoint for retrieving raw repository Markdown.
-- feat: add /api/github/repos/{owner}/{repo}/languages endpoint for fetching language byte distribution.
-- feat: add /api/github/users/{userName}/events endpoint to support contribution heatmaps and recent activity feeds.
-- refactor: replace deprecated UriComponentsBuilder.fromHttpUrl with fromUriString in GithubSearchService.
-- docs: map UI mockups to existing endpoints and document the newly added APIs in FRONTEND_UI_PLAN.md.
+1. The GithubRepoDTO was missing the owner field, and Jackson (the JSON parser) was throwing a serialization error because it was encountering properties from GitHub's API that it didn't know how to map.
+2. The Spring WebClient was missing a User-Agent header, which the GitHub API strictly requires.
+
+Changed done: 
+- Added the missing owner field to GithubRepoDTO.java.
+- Added the @JsonIgnoreProperties(ignoreUnknown = true) annotation to GithubRepoDTO, GithubSearchResponseDTO, and GithubUserProfileDTO so the backend won't fail if GitHub sends extra fields.
+- Added a .defaultHeader("User-Agent", "GithubProfileFinderApp") to the WebClient in GithubSearchService.java to comply with GitHub's API requirements.

@@ -1,7 +1,9 @@
 package com.trio.github_profile_finder_backend.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GithubRepoDTO {
     private Long id;
     private String name;
@@ -21,6 +23,8 @@ public class GithubRepoDTO {
     
     @JsonProperty("forks_count")
     private Integer forksCount;
+
+    private GithubUserProfileDTO owner;
 
     public GithubRepoDTO() {
     }
@@ -87,5 +91,13 @@ public class GithubRepoDTO {
 
     public void setForksCount(Integer forksCount) {
         this.forksCount = forksCount;
+    }
+
+    public GithubUserProfileDTO getOwner() {
+        return owner;
+    }
+
+    public void setOwner(GithubUserProfileDTO owner) {
+        this.owner = owner;
     }
 }

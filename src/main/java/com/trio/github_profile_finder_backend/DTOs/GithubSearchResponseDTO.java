@@ -1,8 +1,10 @@
 package com.trio.github_profile_finder_backend.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GithubSearchResponseDTO<T> {
     
     @JsonProperty("total_count")
