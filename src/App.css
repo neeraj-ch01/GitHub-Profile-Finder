@@ -1,38 +1,181 @@
 .App {
-  text-align: center;
+  text-align: left;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Markdown Readme Styling */
+.prose h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-top: 1.75rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(156, 163, 175, 0.2);
+  padding-bottom: 0.5rem;
+  color: #f3f4f6;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.prose h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(156, 163, 175, 0.2);
+  padding-bottom: 0.25rem;
+  color: #f3f4f6;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #f3f4f6;
 }
 
-.App-link {
-  color: #61dafb;
+.prose p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  line-height: 1.7;
+  color: #d1d5db;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.prose a {
+  color: #60a5fa;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.prose a:hover {
+  color: #93c5fd;
+}
+
+.prose ul, .prose ol {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  color: #d1d5db;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.prose code {
+  font-family: monospace;
+  background-color: rgba(31, 41, 55, 0.5);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  color: #f3f4f6;
+}
+
+.prose pre {
+  background-color: #111827;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #374151;
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.875rem;
+  color: #e5e7eb;
+}
+
+.prose blockquote {
+  border-left: 4px solid #4b5563;
+  padding-left: 1rem;
+  color: #9ca3af;
+  font-style: italic;
+  margin: 1rem 0;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+}
+
+.prose table {
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-collapse: collapse;
+}
+
+.prose th, .prose td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #374151;
+}
+
+.prose th {
+  background-color: #1f2937;
+  text-align: left;
+}
+
+/* Custom utility definitions for the dark UI themes */
+.bg-gray-850 {
+  background-color: #151821;
+}
+
+.bg-gray-750 {
+  background-color: #242936;
+}
+
+.bg-gray-800\/10 {
+  background-color: rgba(31, 41, 55, 0.1);
+}
+
+.bg-gray-850\/50 {
+  background-color: rgba(21, 24, 33, 0.5);
+}
+
+.bg-gray-900\/40 {
+  background-color: rgba(17, 24, 39, 0.4);
+}
+
+.bg-gray-900\/60 {
+  background-color: rgba(17, 24, 39, 0.6);
+}
+
+.border-gray-750 {
+  border-color: #242936;
+}
+
+.border-gray-750\/30 {
+  border-color: rgba(36, 41, 54, 0.3);
+}
+
+.border-gray-750\/50 {
+  border-color: rgba(36, 41, 54, 0.5);
+}
+
+.border-gray-750\/20 {
+  border-color: rgba(36, 41, 54, 0.2);
+}
+
+.text-gray-450 {
+  color: #9ca3af;
+}
+
+.text-blue-450 {
+  color: #60a5fa;
+}
+
+.text-red-555 {
+  color: #ef4444;
 }

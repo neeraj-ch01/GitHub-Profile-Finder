@@ -1,1 +1,8 @@
-scrap later
+fix: add optional chaining and update broken video IDs
+
+1. The frontend was crashing on the homepage when reading `repo.owner.login` because some repositories returned from the backend had a missing owner. 
+2. The Kent C. Dodds and TechWorld with Nana videos on the Tutorials page were returning "Video unavailable" due to restricted embeds.
+
+Changes done:
+- Added optional chaining (`repo.owner?.login` and `repo.owner?.avatar_url`) in `HomePage.js` to prevent React runtime crashes when data is missing.
+- Updated the broken video IDs in `Tutorials.js` to fully functional ones that support external embedding.

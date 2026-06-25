@@ -2,22 +2,22 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import NavbarPage from './components/Navbar';
-import GitHubFinder from './components/GitHubFinderResults';
 import HomePage from './components/HomePage';
 import SearchProfiles from './components/SearchProfiles';
-
-
+import UserProfile from './components/UserProfile';
+import RepoDetail from './components/RepoDetail';
+import Tutorials from './components/Tutorials';
 
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="App bg-gray-900 text-white min-h-screen font-sans">
         <Routes>
           <Route path="/" element={<HomePage />} />
-
-          <Route path="/github-profile-finder-results" element={<GitHubFinder />} /> 
-          <Route path="/search-profiles" element= {<SearchProfiles />} />
+          <Route path="/search-profiles" element={<SearchProfiles />} />
+          <Route path="/users/:userName" element={<UserProfile />} />
+          <Route path="/repos/:owner/:repoName" element={<RepoDetail />} />
+          <Route path="/tutorials" element={<Tutorials />} />
         </Routes>
       </div>
     </Router>
@@ -25,5 +25,3 @@ function App() {
 }
 
 export default App;
-
-
