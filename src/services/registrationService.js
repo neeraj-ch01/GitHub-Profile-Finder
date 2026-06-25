@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080/api/users';
+const BASE_URL = process.env.REACT_APP_API_BASE_URL 
+  ? `${process.env.REACT_APP_API_BASE_URL}/api/users` 
+  : 'http://localhost:8080/api/users';
 
 export const registerUser = async (userData) => {
     try{

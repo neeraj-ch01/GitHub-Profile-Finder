@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_BASE = '/api/github';
+const API_BASE = process.env.REACT_APP_API_BASE_URL 
+  ? `${process.env.REACT_APP_API_BASE_URL}/api/github` 
+  : '/api/github';
 
 const githubService = {
   // Search Users
