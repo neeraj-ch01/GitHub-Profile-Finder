@@ -10,7 +10,9 @@ import java.util.List;
 @Service
 public class UserRepoService {
 
-    private final WebClient webClient = WebClient.create();
+    private final WebClient webClient = WebClient.builder()
+            .defaultHeader("User-Agent", "GithubProfileFinderApp")
+            .build();
 
     public Mono<List<GithubRepoDTO>> fetchUserRepositories(String userName) {
         String url = "https://api.github.com/users/" + userName + "/repos";

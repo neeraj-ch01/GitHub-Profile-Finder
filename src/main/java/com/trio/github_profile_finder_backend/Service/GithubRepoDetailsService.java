@@ -15,7 +15,9 @@ import java.util.List;
 @Service
 public class GithubRepoDetailsService {
 
-    private final WebClient webClient = WebClient.create();
+    private final WebClient webClient = WebClient.builder()
+            .defaultHeader("User-Agent", "GithubProfileFinderApp")
+            .build();
     private final String GITHUB_API_URL = "https://api.github.com/repos/";
 
     public Mono<GithubRepoDTO> getRepositoryDetails(String owner, String repo) {

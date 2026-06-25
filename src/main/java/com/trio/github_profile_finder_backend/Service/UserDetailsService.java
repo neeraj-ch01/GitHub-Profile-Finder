@@ -11,7 +11,9 @@ import java.util.List;
 @Service
 public class UserDetailsService {
 
-    private final WebClient webClient = WebClient.create();
+    private final WebClient webClient = WebClient.builder()
+            .defaultHeader("User-Agent", "GithubProfileFinderApp")
+            .build();
 
     public Mono<GithubUserProfileDTO> fetchUserDetails(String userName) {
         String url = "https://api.github.com/users/" + userName;
