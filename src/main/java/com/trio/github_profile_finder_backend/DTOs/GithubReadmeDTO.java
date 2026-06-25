@@ -14,6 +14,9 @@ public class GithubReadmeDTO {
     @JsonProperty("html_url")
     private String htmlUrl;
     
+    @JsonProperty("download_url")
+    private String downloadUrl;
+    
     private String type;
     private String content;
     private String encoding;
@@ -91,5 +94,13 @@ public class GithubReadmeDTO {
 
     public void setEncoding(String encoding) {
         this.encoding = encoding;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 }
