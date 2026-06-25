@@ -11,7 +11,7 @@ public class WebConfig implements WebFluxConfigurer {
     @Value("${FRONTEND_URL}")
     private String frontendUrl;
 
-    @Value("${GITHUB_TOKEN:}")
+    @Value("${GITHUB_TOKEN}")
     private String githubToken;
 
     @Override
@@ -25,13 +25,14 @@ public class WebConfig implements WebFluxConfigurer {
 
     @org.springframework.context.annotation.Bean
     public org.springframework.web.reactive.function.client.WebClient githubWebClient() {
-        org.springframework.web.reactive.function.client.WebClient.Builder builder = org.springframework.web.reactive.function.client.WebClient.builder()
+        org.springframework.web.reactive.function.client.WebClient.Builder builder = org.springframework.web.reactive.function.client.WebClient
+                .builder()
                 .defaultHeader("User-Agent", "GithubProfileFinderApp");
-        
+
         if (githubToken != null && !githubToken.trim().isEmpty()) {
             builder.defaultHeader("Authorization", "Bearer " + githubToken.trim());
         }
-        
+
         return builder.build();
     }
 }
