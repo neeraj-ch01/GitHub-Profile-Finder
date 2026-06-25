@@ -179,7 +179,7 @@ const UserProfile = () => {
             <div className="bg-gray-850 border border-gray-750/50 rounded-2xl p-6 shadow-xl sticky top-24 backdrop-blur-md space-y-6">
               <div className="text-center lg:text-left space-y-4">
                 <img
-                  src={profile.avatarUrl}
+                  src={profile.avatar_url}
                   alt={profile.name || profile.login}
                   className="w-32 h-32 lg:w-48 lg:h-48 rounded-2xl mx-auto lg:mx-0 border-2 border-gray-700 shadow-lg object-cover"
                 />
