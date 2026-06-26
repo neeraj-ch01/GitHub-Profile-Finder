@@ -1,15 +1,10 @@
-feat: rate-limiting support 
+feat: rich analytics & visualization
 
-Load Balancer Support: Added server.forward-headers-strategy=framework to 
-application.properties
+AnalyticsService.java
+A new Spring @Service that fetches all public repositories for a given username.
+It calculates an aggregated frequency map for languages (e.g., {"Java": 15, "JavaScript": 5}).
+It also identifies the top repositories by Stars and top repositories by Forks.
 
-This allows Spring WebFlux to automatically extract the true Client IP injected by Render's proxy.
-
-Rate Limiting Service: Created RateLimitingService.java that uses Caffeine Cache and Bucket4j. 
-
-Implemented two tiers:
-UUID limit: 100 requests per hour.
-IP limit: 600 requests per hour.
-
-Web Filter Interceptor: Created RateLimitWebFilter.java to intercept all /api/ traffic.
-It ensures the request adheres to both the IP bucket limit and the UUID bucket limit before letting the request pass to the controllers.
+AnalyticsController.java
+Expose a new endpoint: GET /api/github/analytics/{userName}.
+This endpoint returns a combined DTO with language distribution, top starred repos, and top forked repos so the frontend charts can consume it instantly.
