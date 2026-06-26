@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
 import githubService from "../services/githubService";
 import SearchForm from "./search/SearchForm";
@@ -10,9 +10,19 @@ import Footer from "./common/Footer";
 
 const SearchProfiles = () => {
   const navigate = useNavigate();
+  const locationUrl = useLocation();
   
   // Search Mode: 'users' or 'repositories'
-  const [searchMode, setSearchMode] = useState("users");
+  const initialMode = new URLSearchParams(locationUrl.search).get('mode') || "users";
+  const [searchMode, setSearchMode] = useState(initialMode);
+  
+  useEffect(() => {
+    const mode = new URLSearchParams(locationUrl.search).get('mode');
+    if (mode === "repositories" || mode === "users") {
+      setSearchMode(mode);
+    }
+  }, [locationUrl.search]);
+  
   // Search Method for users: 'criteria' (Search by Name/Criteria) or 'direct' (Direct Username Lookup)
   const [searchMethod, setSearchMethod] = useState("criteria");
 
@@ -128,10 +138,12 @@ const SearchProfiles = () => {
         {/* Title Section */}
         <div className="text-center mb-10">
           <h1 className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent inline-block">
-            Developer Discovery Hub
+            {searchMode === "users" ? "Developer Discovery Hub" : "Repo Explorer"}
           </h1>
           <p className="text-gray-400 mt-2 text-lg">
-            Search across millions of GitHub profiles and codebases in real-time.
+            {searchMode === "users" 
+              ? "Search across millions of GitHub profiles in real-time." 
+              : "Browse repositories, view branches, and analyze code structures."}
           </p>
         </div>
 

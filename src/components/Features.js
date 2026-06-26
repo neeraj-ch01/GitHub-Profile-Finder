@@ -21,7 +21,7 @@ const Features = () => {
             icon={<RepoIcon />}
             title="Repo Explorer"
             description="Browse repositories, view branches, and analyze code structures without leaving the dashboard."
-            link="/search-profiles"
+            link="/search-profiles?mode=repositories"
           />
           <FeatureCard
             icon={<StatsIcon />}
