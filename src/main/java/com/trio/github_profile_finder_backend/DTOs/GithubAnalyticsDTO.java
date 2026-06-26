@@ -7,13 +7,15 @@ public class GithubAnalyticsDTO {
     private Map<String, Integer> languageDistribution;
     private List<GithubRepoDTO> topStarredRepos;
     private List<GithubRepoDTO> topForkedRepos;
+    private String avatarUrl;
 
     public GithubAnalyticsDTO() {}
 
-    public GithubAnalyticsDTO(Map<String, Integer> languageDistribution, List<GithubRepoDTO> topStarredRepos, List<GithubRepoDTO> topForkedRepos) {
+    public GithubAnalyticsDTO(Map<String, Integer> languageDistribution, List<GithubRepoDTO> topStarredRepos, List<GithubRepoDTO> topForkedRepos, String avatarUrl) {
         this.languageDistribution = languageDistribution;
         this.topStarredRepos = topStarredRepos;
         this.topForkedRepos = topForkedRepos;
+        this.avatarUrl = avatarUrl;
     }
 
     public Map<String, Integer> getLanguageDistribution() {
@@ -38,5 +40,13 @@ public class GithubAnalyticsDTO {
 
     public void setTopForkedRepos(List<GithubRepoDTO> topForkedRepos) {
         this.topForkedRepos = topForkedRepos;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

@@ -6,13 +6,13 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GithubSearchResponseDTO<T> {
-    
+
     @JsonProperty("total_count")
     private Integer totalCount;
-    
+
     @JsonProperty("incomplete_results")
     private Boolean incompleteResults;
-    
+
     private List<T> items;
 
     public GithubSearchResponseDTO() {
