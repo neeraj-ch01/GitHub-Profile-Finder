@@ -26,8 +26,8 @@ const Features = () => {
           <FeatureCard
             icon={<StatsIcon />}
             title="Rich Analytics"
-            description="Visualize follower growth, language distribution, and contribution heatmaps effortlessly."
-            link="/search-profiles"
+            description="Visualize language distribution, top starred repositories, and contribution heatmaps effortlessly."
+            link="/analytics"
           />
           <FeatureCard
             icon={<TutorialIcon />}
