@@ -392,16 +392,16 @@ const SearchProfiles = () => {
                     <div className="space-y-3">
                       <div className="flex items-center space-x-2">
                         <img
-                          src={repo.owner.avatar_url}
-                          alt={repo.owner.login}
+                          src={repo.owner?.avatar_url}
+                          alt={repo.owner?.login}
                           className="w-5 h-5 rounded-full"
                         />
-                        <Link to={`/users/${repo.owner.login}`} className="text-xs text-gray-450 hover:text-white font-mono">
-                          {repo.owner.login}
+                        <Link to={`/users/${repo.owner?.login}`} className="text-xs text-gray-450 hover:text-white font-mono">
+                          {repo.owner?.login}
                         </Link>
                       </div>
                       <Link
-                        to={`/repos/${repo.owner.login}/${repo.name}`}
+                        to={`/repos/${repo.owner?.login}/${repo.name}`}
                         className="text-lg font-bold text-white hover:text-blue-450 hover:underline block truncate"
                       >
                         {repo.name}

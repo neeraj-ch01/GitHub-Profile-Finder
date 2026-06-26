@@ -1,4 +1,0 @@
-fix: scrolled to bottom issue
-
-Created a new component at src/components/ScrollToTop.js that uses useLocation from React Router to detect path changes and triggers window.scrollTo(0, 0).
-Updated src/App.js to include the <ScrollToTop /> component inside the <Router>, so that every navigation event resets the scroll correctly.
