@@ -75,6 +75,42 @@ const AnalyticsDashboard = () => {
     forks: repo.forks_count
   }));
 
+  const totalStars = data.totalStars || 0;
+  const totalForks = data.totalForks || 0;
+  
+  // Format Topic Data
+  const topicData = Object.entries(data.topicDistribution || {})
+    .map(([key, value]) => ({ text: key, value }))
+    .sort((a, b) => b.value - a.value);
+
+  const maxTopicCount = Math.max(...topicData.map(t => t.value), 1);
+  const getFontSize = (value) => {
+    const minSize = 12;
+    const maxSize = 36;
+    return minSize + (value / maxTopicCount) * (maxSize - minSize);
+  };
+
+  const renderCustomizedLabel = ({ x, y, textAnchor, name, percent, fill }) => {
+    const words = name.split(' ');
+    const percentage = `${(percent * 100).toFixed(0)}%`;
+    
+    // Add a small offset to push text slightly farther from the line ending
+    const xOffset = textAnchor === 'start' ? 12 : -12;
+    
+    return (
+      <text x={x + xOffset} y={y} fill={fill} textAnchor={textAnchor} dominantBaseline="central" fontSize={14}>
+        {words.map((word, i) => (
+          <tspan x={x + xOffset} dy={i === 0 ? 0 : 18} key={i}>
+            {word}
+          </tspan>
+        ))}
+        <tspan x={x + xOffset} dy={18} fill={fill} fontWeight="bold">
+          {percentage}
+        </tspan>
+      </text>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white font-sans flex flex-col">
       <Navbar />
@@ -93,6 +129,32 @@ const AnalyticsDashboard = () => {
             </svg>
             Back to Search
           </Link>
+        </div>
+
+        {/* Impact Scorecards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-gradient-to-br from-yellow-500 to-orange-400 rounded-2xl p-6 shadow-xl flex items-center justify-between">
+            <div>
+              <p className="text-yellow-100 text-sm font-medium uppercase tracking-wider mb-1">Total Stars Earned</p>
+              <h3 className="text-4xl font-extrabold text-white">{totalStars.toLocaleString()}</h3>
+            </div>
+            <div className="bg-white/20 p-4 rounded-full">
+              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            </div>
+          </div>
+          <div className="bg-gradient-to-br from-emerald-500 to-teal-400 rounded-2xl p-6 shadow-xl flex items-center justify-between">
+            <div>
+              <p className="text-emerald-100 text-sm font-medium uppercase tracking-wider mb-1">Total Forks Accumulated</p>
+              <h3 className="text-4xl font-extrabold text-white">{totalForks.toLocaleString()}</h3>
+            </div>
+            <div className="bg-white/20 p-4 rounded-full">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </div>
+          </div>
         </div>
 
         {/* Profile Banner & Heatmap Section */}
@@ -149,7 +211,7 @@ const AnalyticsDashboard = () => {
             <div className="flex-grow min-h-[300px]">
               {languageData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
+                  <PieChart margin={{ top: 20, right: 60, left: 60, bottom: 20 }}>
                     <Pie
                       data={languageData}
                       cx="50%"
@@ -158,7 +220,7 @@ const AnalyticsDashboard = () => {
                       outerRadius={140}
                       paddingAngle={5}
                       dataKey="value"
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      label={renderCustomizedLabel}
                     >
                       {languageData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -191,7 +253,7 @@ const AnalyticsDashboard = () => {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={topStarredData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
-                      <XAxis dataKey="name" stroke="#9CA3AF" tick={{ fill: '#9CA3AF' }} tickFormatter={(value) => value.length > 10 ? value.substring(0, 10) + '...' : value} />
+                      <XAxis dataKey="name" stroke="#9CA3AF" interval={0} tick={{ fill: '#9CA3AF', fontSize: 12 }} tickFormatter={(value) => value.length > 10 ? value.substring(0, 10) + '...' : value} />
                       <YAxis stroke="#9CA3AF" tick={{ fill: '#9CA3AF' }} allowDecimals={false} />
                       <Tooltip
                         contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '0.5rem', color: '#fff' }}
@@ -219,7 +281,7 @@ const AnalyticsDashboard = () => {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={topForkedData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
-                      <XAxis dataKey="name" stroke="#9CA3AF" tick={{ fill: '#9CA3AF' }} tickFormatter={(value) => value.length > 10 ? value.substring(0, 10) + '...' : value} />
+                      <XAxis dataKey="name" stroke="#9CA3AF" interval={0} tick={{ fill: '#9CA3AF', fontSize: 12 }} tickFormatter={(value) => value.length > 10 ? value.substring(0, 10) + '...' : value} />
                       <YAxis stroke="#9CA3AF" tick={{ fill: '#9CA3AF' }} allowDecimals={false} />
                       <Tooltip
                         contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '0.5rem', color: '#fff' }}
@@ -233,6 +295,31 @@ const AnalyticsDashboard = () => {
                 )}
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Topics Word Cloud */}
+        <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 shadow-xl mt-8">
+          <h2 className="text-xl font-semibold mb-6 flex items-center">
+            <svg className="w-5 h-5 mr-3 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+            Repository Topics
+          </h2>
+          <div className="flex flex-wrap justify-center items-center gap-4 py-8 px-4">
+            {topicData.length > 0 ? (
+              topicData.map((topic, index) => (
+                <span 
+                  key={index} 
+                  className="inline-block px-4 py-2 rounded-full bg-gray-700/50 text-gray-200 border border-gray-600/50 shadow-sm transition-transform hover:scale-110 hover:bg-pink-500/20 hover:text-pink-300 hover:border-pink-500/50 cursor-default"
+                  style={{ fontSize: `${getFontSize(topic.value)}px` }}
+                >
+                  {topic.text}
+                </span>
+              ))
+            ) : (
+              <div className="text-gray-500">No topics found across repositories.</div>
+            )}
           </div>
         </div>
       </div>

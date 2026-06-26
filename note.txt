@@ -1,0 +1,8 @@
+feat(analytics): redesign dashboard UI and expand metrics
+
+- Redesigned `AnalyticsSearch` form to a modern, cohesive pill-shaped layout.
+- Added a new profile banner in `AnalyticsDashboard` featuring a gradient ribbon and the user's avatar overlapping the heatmap boundary.
+- Introduced "Total Impact Scorecards" showcasing Total Stars and Total Forks using vibrant gradient cards.
+- Built a custom "Repository Topics Word Cloud" using a flex-wrap engine with dynamic, frequency-based font sizing.
+- Implemented a custom multi-line label formatter for the Language Distribution PieChart to fix clipping issues and match slice colors.
+- Enforced X-Axis intervals on BarCharts to prevent missing labels for the first items.
