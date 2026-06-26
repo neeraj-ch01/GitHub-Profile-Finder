@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Features from "./Features";
-import Navbar from "./Navbar";
-import githubService from "../services/githubService";
-import Footer from "./common/Footer";
+import Navbar from "../common/Navbar";
+import githubService from "../../services/githubService";
+import Footer from "../common/Footer";
 const HomePage = () => {
   const [trendingRepos, setTrendingRepos] = useState([]);
   const [loading, setLoading] = useState(true);

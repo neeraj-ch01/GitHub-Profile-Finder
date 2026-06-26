@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import Navbar from "./Navbar";
+import Navbar from "./common/Navbar";
 import githubService from "../services/githubService";
 import ProfileSidebar from "./profile/ProfileSidebar";
 import ProfileStats from "./profile/ProfileStats";

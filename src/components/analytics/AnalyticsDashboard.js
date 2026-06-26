@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import Navbar from "./Navbar";
-import apiClient from "../services/apiClient";
-import ImpactScorecards from "./analytics/ImpactScorecards";
-import ProfileBanner from "./analytics/ProfileBanner";
-import LanguagePieChart from "./analytics/LanguagePieChart";
-import TopicsWordCloud from "./analytics/TopicsWordCloud";
-import RepoBarChart from "./analytics/RepoBarChart";
-import Footer from "./common/Footer";
+import Navbar from "../common/Navbar";
+import apiClient from "../../services/apiClient";
+import ImpactScorecards from "./ImpactScorecards";
+import ProfileBanner from "./ProfileBanner";
+import LanguagePieChart from "./LanguagePieChart";
+import TopicsWordCloud from "./TopicsWordCloud";
+import RepoBarChart from "./RepoBarChart";
+import Footer from "../common/Footer";
 
 const AnalyticsDashboard = () => {
   const { userName } = useParams();

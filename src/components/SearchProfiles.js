@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Navbar from "./Navbar";
+import Navbar from "./common/Navbar";
 import githubService from "../services/githubService";
 import SearchForm from "./search/SearchForm";
 import UserCard from "./search/UserCard";
