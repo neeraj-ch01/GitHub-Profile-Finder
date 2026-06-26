@@ -56,7 +56,7 @@ const SearchProfiles = () => {
           pageSize
         );
         setResults(response.items || []);
-        setTotalCount(response.totalCount || 0);
+        setTotalCount(response.total_count || 0);
       } else {
         const response = await githubService.searchRepositories(
           query.trim(),
@@ -64,7 +64,7 @@ const SearchProfiles = () => {
           pageSize
         );
         setResults(response.items || []);
-        setTotalCount(response.totalCount || 0);
+        setTotalCount(response.total_count || 0);
       }
     } catch (err) {
       console.error(err);
@@ -347,7 +347,7 @@ const SearchProfiles = () => {
                   >
                     <div className="flex items-start space-x-4">
                       <img
-                        src={user.avatarUrl}
+                        src={user.avatar_url}
                         alt={user.login}
                         className="w-16 h-16 rounded-2xl border border-gray-700"
                       />

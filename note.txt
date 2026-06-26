@@ -1,13 +1,18 @@
-fix: Invlide Date issue
+fix: Broken Avatars
 
-The GitHub API returns dates using the created_at snake_case property. In the Spring Boot backend, DTOs such as GithubEventDTO and GithubIssueDTO define a createdAt field explicitly mapped with @JsonProperty("created_at").
+RCA (Root Cause Analysis)
+Found 0 results: The GitHub API returns the total number of search results in a field called total_count. The backend serializes this exactly as total_count due to the @JsonProperty("total_count") annotation. However, SearchProfiles.js was expecting response-> totalCount. Since this was undefined, the frontend defaulted to 0 (using the fallback logic response.totalCount || 0). The 4 results were successfully mapped into the results array, but the counter always showed 0.
+Broken Avatars: Similarly, the avatar link is provided by the backend as avatar_url. In SearchProfiles.js, the image src was bound to user.avatarUrl. Since user.avatarUrl was undefined, the browser couldn't fetch an image and instead displayed the alt text (the user's login handle) alongside a broken image icon.
 
-Jackson uses the @JsonProperty annotation not just for reading data from GitHub, but also when sending the final payload back to the frontend. As a result, the backend forwards the property as "created_at" rather than converting it to "createdAt".
-
-The frontend was attempting to access event.createdAt (in UserProfile.js) and issue.createdAt (in RepoDetail.js). Since those fields were undefined, new Date(undefined) was executed, which directly evaluates to the "Invalid Date" string on the UI.
-Resoved this issue  by updating the frontend to expect the correct snake_case property sent by the backend. This aligns with other existing data mappings in the frontend (like stargazers_count and public_repos)
+Resolution
+Updated the frontend components to correctly reference the snake_case properties expected from the backend payload.
 
 Changes made:
 
-In src/components/UserProfile.js: Replaced event.createdAt with event.created_at.
-In src/components/RepoDetail.js: Replaced issue.createdAt with issue.created_at.
+In src/components/SearchProfiles.js:
+Replaced response.totalCount with response.total_count.
+Replaced user.avatarUrl with user.avatar_url.
+
+In src/components/RepoDetail.js (preemptive fixes):
+Replaced commitItem.author.avatarUrl with commitItem.author.avatar_url.
+Replaced commitItem.htmlUrl and issue.htmlUrl with html_url.

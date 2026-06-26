@@ -302,9 +302,9 @@ const RepoDetail = () => {
                     {commitItem.commit?.message}
                   </h4>
                   <div className="flex items-center space-x-2 text-xs text-gray-450">
-                    {commitItem.author?.avatarUrl ? (
+                    {commitItem.author?.avatar_url ? (
                       <img
-                        src={commitItem.author.avatarUrl}
+                        src={commitItem.author.avatar_url}
                         alt={commitItem.commit?.author?.name}
                         className="w-4 h-4 rounded-full"
                       />
@@ -316,7 +316,7 @@ const RepoDetail = () => {
                   </div>
                 </div>
                 <a
-                  href={commitItem.htmlUrl}
+                  href={commitItem.html_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-mono text-xs bg-gray-900 border border-gray-700 px-3 py-1.5 rounded-lg text-blue-400 hover:bg-gray-800 shrink-0 shadow-sm"
@@ -373,7 +373,7 @@ const RepoDetail = () => {
                       <i className="far fa-dot-circle mr-1"></i> {issue.state}
                     </span>
                     <a
-                      href={issue.htmlUrl}
+                      href={issue.html_url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm font-bold text-white hover:text-blue-450 hover:underline leading-snug line-clamp-1"
