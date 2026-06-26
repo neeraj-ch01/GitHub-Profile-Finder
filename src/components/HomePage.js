@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Features from "./Features";
 import Navbar from "./Navbar";
 import githubService from "../services/githubService";
-
+import Footer from "./common/Footer";
 const HomePage = () => {
   const [trendingRepos, setTrendingRepos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -189,11 +189,7 @@ const HomePage = () => {
       <Features />
 
       {/* Footer */}
-      <footer className="bg-gray-800/50 backdrop-blur-sm border-t border-gray-700 text-center py-10 mt-auto">
-        <div className="max-w-7xl mx-auto px-4">
-          <p className="text-gray-400">© {new Date().getFullYear()} GitHub Finder Utility. Designed for Developers.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

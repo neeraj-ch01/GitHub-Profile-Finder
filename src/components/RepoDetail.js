@@ -7,6 +7,7 @@ import ReadmeTab from "./repo/ReadmeTab";
 import CommitsTab from "./repo/CommitsTab";
 import BranchesTab from "./repo/BranchesTab";
 import IssuesTab from "./repo/IssuesTab";
+import Footer from "./common/Footer";
 
 const RepoDetail = () => {
   const { owner, repoName } = useParams();
@@ -272,6 +273,7 @@ const RepoDetail = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import SearchForm from "./search/SearchForm";
 import UserCard from "./search/UserCard";
 import RepositoryCard from "./search/RepositoryCard";
 import Pagination from "./common/Pagination";
+import Footer from "./common/Footer";
 
 const SearchProfiles = () => {
   const navigate = useNavigate();
@@ -213,11 +214,7 @@ const SearchProfiles = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-850 border-t border-gray-800 text-center py-10 mt-auto">
-        <div className="max-w-7xl mx-auto px-4">
-          <p className="text-gray-400">© {new Date().getFullYear()} GitHub Finder Utility. Designed for Developers.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

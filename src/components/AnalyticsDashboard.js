@@ -7,6 +7,7 @@ import ProfileBanner from "./analytics/ProfileBanner";
 import LanguagePieChart from "./analytics/LanguagePieChart";
 import TopicsWordCloud from "./analytics/TopicsWordCloud";
 import RepoBarChart from "./analytics/RepoBarChart";
+import Footer from "./common/Footer";
 
 const AnalyticsDashboard = () => {
   const { userName } = useParams();
@@ -147,6 +148,7 @@ const AnalyticsDashboard = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

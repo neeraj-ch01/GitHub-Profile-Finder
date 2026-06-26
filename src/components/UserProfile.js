@@ -6,6 +6,7 @@ import ProfileSidebar from "./profile/ProfileSidebar";
 import ProfileStats from "./profile/ProfileStats";
 import ActivityFeed from "./profile/ActivityFeed";
 import UserRepoCard from "./profile/UserRepoCard";
+import Footer from "./common/Footer";
 
 const UserProfile = () => {
   const { userName } = useParams();
@@ -133,6 +134,7 @@ const UserProfile = () => {
 
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

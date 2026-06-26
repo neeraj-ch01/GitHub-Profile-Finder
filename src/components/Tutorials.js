@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "./Navbar";
-
+import Footer from "./common/Footer";
 const Tutorials = () => {
   const tutorialVideos = [
     {
@@ -106,11 +106,7 @@ const Tutorials = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-850 border-t border-gray-800 text-center py-10 mt-auto">
-        <div className="max-w-7xl mx-auto px-4">
-          <p className="text-gray-400">© {new Date().getFullYear()} GitHub Finder Utility. Designed for Developers.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

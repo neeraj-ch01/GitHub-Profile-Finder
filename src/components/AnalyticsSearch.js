@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import Footer from "./common/Footer";
 
 const AnalyticsSearch = () => {
   const [username, setUsername] = useState("");
@@ -48,6 +49,7 @@ const AnalyticsSearch = () => {
           </form>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
