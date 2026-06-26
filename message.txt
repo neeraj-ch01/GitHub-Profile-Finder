@@ -1,0 +1,8 @@
+feat(analytics): implement rich analytics dashboard and visualization
+
+- Added `react-github-calendar` for GitHub contribution heatmaps.
+- Added `recharts` for visualizing Language Distribution, Top Starred Repositories, and Most Forked Repositories.
+- Created `AnalyticsSearch.jsx` to provide a clean, dedicated search interface for analytics lookup.
+- Created `AnalyticsDashboard.jsx` to render the various graphical data components utilizing the new backend `/api/github/analytics/{userName}` endpoint.
+- Updated `App.js` to introduce the new `/analytics` and `/analytics/:userName` routes.
+- Modified `Features.js` to update the 'Rich Analytics' card to point to the new `/analytics` route instead of `/search-profiles` and updated its description text.

@@ -1,9 +1,0 @@
-feat: UUID generation, header injection & Throttling
-
-UUID Generation: apiClient.js now checks localStorage for github_finder_client_id. 
-If it's not present, it generates a unique UUID using the uuid package.
-
-Header Injection: Every outgoing request automatically gets the X-Client-ID header attached.
-
-Throttling Handling: If the backend responds with 429 Too Many Requests, the global response interceptor catches it and presents an alert: "You have exceeded the API request limit. Please try again later." 
-This ensures the application handles the limitation gracefully.

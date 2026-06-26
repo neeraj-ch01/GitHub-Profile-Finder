@@ -16,8 +16,10 @@
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.7",
     "react-dom": "^19.0.0",
+    "react-github-calendar": "^5.0.6",
     "react-router-dom": "^7.1.1",
     "react-scripts": "^5.0.1",
+    "recharts": "^3.9.0",
     "uuid": "^14.0.1"
   },
   "scripts": {
