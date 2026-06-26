@@ -1,110 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { marked } from "marked";
-import mermaid from "mermaid";
 import Navbar from "./Navbar";
 import githubService from "../services/githubService";
-
-mermaid.initialize({ startOnLoad: false, theme: 'dark' });
-
-const escapeHtml = (text) => {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-};
-
-marked.use({
-  renderer: {
-    code(token) {
-      const code = token.text;
-      const lang = token.lang || "";
-      if (lang === "mermaid") {
-        return `<div class="mermaid">${escapeHtml(code)}</div>`;
-      }
-      return false;
-    }
-  }
-});
-
-const LANGUAGE_COLORS = {
-  JavaScript: "#f1e05a",
-  Python: "#3572A5",
-  Java: "#b07219",
-  HTML: "#e34c26",
-  CSS: "#563d7c",
-  TypeScript: "#3178c6",
-  C: "#555555",
-  "C++": "#f34b7d",
-  "C#": "#178600",
-  Ruby: "#701516",
-  Go: "#00ADD8",
-  Rust: "#dea584",
-  PHP: "#4F5D95",
-  Shell: "#89e051",
-  Kotlin: "#A97BFF",
-  Swift: "#F05138"
-};
-
-const getLangColor = (lang) => LANGUAGE_COLORS[lang] || "#858585";
-
-const decodeReadme = (readmeDto) => {
-  if (!readmeDto || !readmeDto.content) return "";
-  if (readmeDto.encoding === "base64") {
-    try {
-      const cleanBase64 = readmeDto.content.replace(/\s/g, "");
-      return decodeURIComponent(
-        atob(cleanBase64)
-          .split("")
-          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-          .join("")
-      );
-    } catch (e) {
-      console.error("Base64 decoding failed:", e);
-      try {
-        return atob(readmeDto.content.replace(/\s/g, ""));
-      } catch (err) {
-        return readmeDto.content;
-      }
-    }
-  }
-  return readmeDto.content;
-};
-
-const transformMarkdownUrls = (md, repoOwner, repoName, downloadUrl) => {
-  if (!md) return "";
-  
-  let baseUrl = "";
-  if (downloadUrl) {
-    baseUrl = downloadUrl.substring(0, downloadUrl.lastIndexOf("/") + 1);
-  } else {
-    baseUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/master/`;
-  }
-  
-  const resolveRelativeUrl = (base, relativePath) => {
-    if (!relativePath) return "";
-    let cleanPath = relativePath;
-    if (cleanPath.startsWith("./")) {
-      cleanPath = cleanPath.substring(2);
-    }
-    if (cleanPath.startsWith("/")) {
-      cleanPath = cleanPath.substring(1);
-    }
-    return `${base}${cleanPath}`;
-  };
-
-  let result = md.replace(/!\[([^\]]*)\]\((?!https?:\/\/|#|data:)([^)]+)\)/g, (match, alt, path) => {
-    return `![${alt}](${resolveRelativeUrl(baseUrl, path)})`;
-  });
-
-  result = result.replace(/<img([^>]*)\bsrc=["'](?!https?:\/\/|#|data:)([^"']+)["']/gi, (match, attrs, path) => {
-    return `<img${attrs}src="${resolveRelativeUrl(baseUrl, path)}"`;
-  });
-  
-  return result;
-};
+import LanguagesBreakdown from "./repo/LanguagesBreakdown";
+import ReadmeTab from "./repo/ReadmeTab";
+import CommitsTab from "./repo/CommitsTab";
+import BranchesTab from "./repo/BranchesTab";
+import IssuesTab from "./repo/IssuesTab";
 
 const RepoDetail = () => {
   const { owner, repoName } = useParams();
@@ -184,66 +86,6 @@ const RepoDetail = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, repo, owner, repoName]);
 
-  // Run mermaid rendering after markdown is injected
-  useEffect(() => {
-    if (activeTab === "overview" && readme) {
-      const renderMermaid = async () => {
-        try {
-          await mermaid.run({ querySelector: '.mermaid' });
-        } catch (e) {
-          console.warn("Mermaid rendering failed:", e);
-        }
-      };
-      const timer = setTimeout(renderMermaid, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [activeTab, readme]);
-
-  // Calculations for Language distribution
-  const renderLanguagesBar = () => {
-    if (!languages || Object.keys(languages).length === 0) return null;
-    const totalBytes = Object.values(languages).reduce((sum, bytes) => sum + bytes, 0);
-
-    return (
-      <div className="bg-gray-850 border border-gray-750/30 rounded-2xl p-6 shadow-md space-y-4">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-gray-450">Languages</h3>
-        {/* Horizontal Stacked Progress Bar */}
-        <div className="w-full h-3 rounded-full flex overflow-hidden bg-gray-750">
-          {Object.entries(languages).map(([lang, bytes]) => {
-            const percentage = ((bytes / totalBytes) * 100).toFixed(1);
-            return (
-              <div
-                key={lang}
-                style={{
-                  width: `${percentage}%`,
-                  backgroundColor: getLangColor(lang)
-                }}
-                title={`${lang}: ${percentage}%`}
-                className="h-full"
-              ></div>
-            );
-          })}
-        </div>
-        {/* Legend */}
-        <div className="flex flex-wrap gap-x-5 gap-y-2">
-          {Object.entries(languages).map(([lang, bytes]) => {
-            const percentage = ((bytes / totalBytes) * 100).toFixed(1);
-            return (
-              <div key={lang} className="flex items-center space-x-2 text-xs font-semibold">
-                <span
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={{ backgroundColor: getLangColor(lang) }}
-                ></span>
-                <span className="text-gray-300">{lang}</span>
-                <span className="text-gray-500">{percentage}%</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
   const renderTabContent = () => {
     if (loadingTab) {
       return (
@@ -264,138 +106,16 @@ const RepoDetail = () => {
 
     switch (activeTab) {
       case "overview":
-        if (!readme) {
-          return (
-            <div className="p-8 text-center text-gray-450 italic">
-              No README.md found in the root directory.
-            </div>
-          );
-        }
-        try {
-          let rawMarkdown = decodeReadme(readme);
-          rawMarkdown = transformMarkdownUrls(rawMarkdown, owner, repoName, readme.download_url);
-          const html = marked.parse(rawMarkdown);
-          return (
-            <div
-              className="p-8 prose prose-invert max-w-none text-gray-300 break-words mermaid-container"
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
-          );
-        } catch (e) {
-          return <div className="p-8 text-red-400">Failed to render README.md.</div>;
-        }
+        return <ReadmeTab readme={readme} owner={owner} repoName={repoName} />;
 
       case "commits":
-        if (commits.length === 0) {
-          return (
-            <div className="p-8 text-center text-gray-450 italic">
-              No commits found or unable to access commit history.
-            </div>
-          );
-        }
-        return (
-          <div className="divide-y divide-gray-750/30">
-            {commits.map((commitItem) => (
-              <div key={commitItem.sha} className="p-5 hover:bg-gray-800/10 transition-colors flex justify-between items-start">
-                <div className="space-y-1.5 pr-4 overflow-hidden">
-                  <h4 className="text-sm font-bold text-white leading-snug line-clamp-2">
-                    {commitItem.commit?.message}
-                  </h4>
-                  <div className="flex items-center space-x-2 text-xs text-gray-450">
-                    {commitItem.author?.avatar_url ? (
-                      <img
-                        src={commitItem.author.avatar_url}
-                        alt={commitItem.commit?.author?.name}
-                        className="w-4 h-4 rounded-full"
-                      />
-                    ) : (
-                      <span className="text-gray-600"><i className="fas fa-user-circle"></i></span>
-                    )}
-                    <span className="font-semibold text-gray-300">{commitItem.commit?.author?.name}</span>
-                    <span>committed on {new Date(commitItem.commit?.author?.date).toLocaleDateString()}</span>
-                  </div>
-                </div>
-                <a
-                  href={commitItem.html_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-mono text-xs bg-gray-900 border border-gray-700 px-3 py-1.5 rounded-lg text-blue-400 hover:bg-gray-800 shrink-0 shadow-sm"
-                >
-                  {commitItem.sha?.substring(0, 7)}
-                </a>
-              </div>
-            ))}
-          </div>
-        );
+        return <CommitsTab commits={commits} />;
 
       case "branches":
-        if (branches.length === 0) {
-          return (
-            <div className="p-8 text-center text-gray-450 italic">
-              No branches found.
-            </div>
-          );
-        }
-        return (
-          <div className="divide-y divide-gray-750/30">
-            {branches.map((branch) => (
-              <div key={branch.name} className="p-5 flex justify-between items-center hover:bg-gray-800/10">
-                <div className="flex items-center space-x-2.5">
-                  <span className="text-gray-500"><i className="fas fa-code-branch"></i></span>
-                  <span className="text-sm font-bold text-gray-200 font-mono">{branch.name}</span>
-                </div>
-                <div className="flex items-center space-x-3 text-xs text-gray-500">
-                  <span>Last commit:</span>
-                  <span className="font-mono bg-gray-900 px-2.5 py-1 border border-gray-700/50 rounded-md text-gray-400">
-                    {branch.commit?.sha?.substring(0, 7)}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        );
+        return <BranchesTab branches={branches} />;
 
       case "issues":
-        if (issues.length === 0) {
-          return (
-            <div className="p-8 text-center text-gray-450 italic">
-              No open issues found in this repository.
-            </div>
-          );
-        }
-        return (
-          <div className="divide-y divide-gray-750/30">
-            {issues.map((issue) => (
-              <div key={issue.id} className="p-5 flex items-start justify-between hover:bg-gray-800/10">
-                <div className="space-y-1.5">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-green-500 text-xs font-semibold px-2 py-0.5 bg-green-500/10 border border-green-500/20 rounded">
-                      <i className="far fa-dot-circle mr-1"></i> {issue.state}
-                    </span>
-                    <a
-                      href={issue.html_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-bold text-white hover:text-blue-450 hover:underline leading-snug line-clamp-1"
-                    >
-                      {issue.title}
-                    </a>
-                  </div>
-                  <div className="flex items-center space-x-2 text-xs text-gray-400">
-                    <span>#{issue.id}</span>
-                    <span>opened on {new Date(issue.created_at).toLocaleDateString()}</span>
-                    <span>by</span>
-                    {issue.user && (
-                      <Link to={`/users/${issue.user.login}`} className="text-gray-300 font-semibold hover:underline">
-                        {issue.user.login}
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        );
+        return <IssuesTab issues={issues} />;
 
       default:
         return null;
@@ -498,7 +218,7 @@ const RepoDetail = () => {
         </div>
 
         {/* Languages Breakdown */}
-        {renderLanguagesBar()}
+        <LanguagesBreakdown languages={languages} />
 
         {/* Tabbed interface system */}
         <div className="space-y-4">
@@ -557,3 +277,4 @@ const RepoDetail = () => {
 };
 
 export default RepoDetail;
+

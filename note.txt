@@ -1,24 +1,13 @@
-# Dashboard Layout Redesign and Custom Animations
+refactor: modularize frontend components
 
-## General Layout & Whitespace Refinements
-- **Compact Padding**: Reduced the overall vertical whitespace between the primary container and the Navbar (`md:py-10` → `md:py-4`).
-- **Title Gap**: Tightened the margin below the main dashboard title (`mb-2` → `mb-1`).
-- **Section Spacing**: Decreased the margin gaps beneath the Impact Scorecards and the Contribution Heatmap (`mb-6` → `mb-4`) to create a tighter, more cohesive visual hierarchy.
-
-## Impact Scorecard Sizing
-- **Card Height Optimization**: Greatly reduced the vertical height of the two impact scorecards ("Total Stars" and "Total Forks").
-- **Internal Padding**: Swapped uniform padding (`p-6`) for tightened vertical padding (`py-3 px-5`).
-- **Typography & Iconography**: Shrunk the primary statistic font size (`text-4xl` → `text-3xl`) and scaled down the corresponding SVG icons and their circular wrappers for a sleeker look.
-
-## Grid Realignment (Left & Right Columns)
-- **Vertical Chart Grouping**: Refactored the charts section into two distinct flex columns. 
-- **Left Column**: Stacked the `Language Distribution` Pie Chart and `Repository Topics` Word Cloud vertically underneath each other.
-- **Right Column**: Maintained the two bar charts (`Top Starred` and `Most Forked`).
-- **Pie Chart Scaling**: Reduced the inner (`90`) and outer (`130`) radii of the Language Distribution donut chart to neatly fit its new half-width column. Shifted its `cy` anchor to `45%` and adjusted its bottom margins to allocate plenty of clean, uncluttered space for the interactive chart legend at the bottom.
-
-## Repository Topics UI & Word Cloud Animations
-- **White Theme Override**: Restructured the Repository Topics card completely to use a clean, solid white background (`bg-white`) with dark text (`text-gray-900`), removing the previous dark gray wrapper borders.
-- **Palette Update**: Updated `wordCloudColors` to a rich, dark, high-contrast palette (crimson, emerald, navy blue, deep purple) guaranteeing crisp legibility against the white canvas.
-- **Framer Motion & CSS Integration**: Imported `framer-motion` and injected a custom `<style>` block directly into the dashboard.
-- **True Word Vibration**: Implemented a `wordFloat` CSS keyframe animation utilizing `opacity` flickering and shifting `drop-shadows` rather than `transform: scale`, ensuring D3's inline SVG coordinates aren't disrupted.
-- **Staggered Delays**: Applied the animation to the word cloud's `<text>` tags using `nth-child` targeting, generating independent vibration speeds and delays so each individual topic pulses organically.
+- Extracted logic from large page-level components into smaller, reusable sub-components.
+- Created 5 new directories: `analytics`, `common`, `profile`, `repo`, and `search`.
+- Created the following new components:
+  - `analytics/`: ImpactScorecards.js, LanguagePieChart.js, ProfileBanner.js, RepoBarChart.js, TopicsWordCloud.js
+  - `common/`: Pagination.js
+  - `profile/`: ActivityFeed.js, ProfileSidebar.js, ProfileStats.js, UserRepoCard.js
+  - `repo/`: BranchesTab.js, CommitsTab.js, IssuesTab.js, LanguagesBreakdown.js, ReadmeTab.js
+  - `search/`: RepositoryCard.js, SearchForm.js, UserCard.js
+- Refactored `AnalyticsDashboard.js`, `SearchProfiles.js`, `RepoDetail.js`, and `UserProfile.js` to utilize the new modular components.
+- Maintained existing styling, state management, and application functionality.
+- Verified successful production build after refactoring.
