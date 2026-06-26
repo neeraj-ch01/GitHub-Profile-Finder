@@ -5,6 +5,28 @@ import apiClient from "../services/apiClient";
 import { GitHubCalendar } from "react-github-calendar";
 import { PieChart, Pie, Cell, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import WordCloud from "react-d3-cloud";
+import { motion } from "framer-motion";
+
+const wordCloudStyles = `
+  .word-cloud-wrapper text {
+    animation: wordFloat 3s ease-in-out infinite alternate;
+  }
+  .word-cloud-wrapper text:nth-child(even) {
+    animation-duration: 4s;
+    animation-delay: 0.5s;
+    animation-direction: alternate-reverse;
+  }
+  .word-cloud-wrapper text:nth-child(3n) {
+    animation-duration: 2.5s;
+    animation-delay: 1s;
+  }
+  @keyframes wordFloat {
+    0% { filter: drop-shadow(0 0 0px rgba(0,0,0,0)); opacity: 1; }
+    33% { filter: drop-shadow(2px 0 2px rgba(0,0,0,0.2)); opacity: 0.8; }
+    66% { filter: drop-shadow(-2px 0 2px rgba(0,0,0,0.2)); opacity: 0.9; }
+    100% { filter: drop-shadow(0 0 0px rgba(0,0,0,0)); opacity: 1; }
+  }
+`;
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF19A3', '#19FFD5', '#D5FF19'];
 
@@ -78,7 +100,7 @@ const AnalyticsDashboard = () => {
 
   const totalStars = data.totalStars || 0;
   const totalForks = data.totalForks || 0;
-  
+
   // Format Topic Data
   const topicData = Object.entries(data.topicDistribution || {})
     .map(([key, value]) => ({ text: key, value }))
@@ -87,7 +109,7 @@ const AnalyticsDashboard = () => {
 
 
   // Word Cloud configuration
-  const wordCloudColors = ['#FCA5A5', '#FCD34D', '#86EFAC', '#93C5FD', '#A78BFA', '#F472B6', '#34D399', '#38BDF8'];
+  const wordCloudColors = ['#1E3A8A', '#047857', '#BE185D', '#B45309', '#4C1D95', '#B91C1C', '#065F46', '#831843'];
   const maxTopicCount = Math.max(...topicData.map(t => t.value), 1);
   const fontSizeMapper = word => Math.floor(12 + (word.value / maxTopicCount) * 20);
   const rotate = word => {
@@ -105,10 +127,10 @@ const AnalyticsDashboard = () => {
   const renderCustomizedLabel = ({ x, y, textAnchor, name, percent, fill }) => {
     const words = name.split(' ');
     const percentage = `${(percent * 100).toFixed(0)}%`;
-    
+
     // Add a small offset to push text slightly farther from the line ending
     const xOffset = textAnchor === 'start' ? 12 : -12;
-    
+
     return (
       <text x={x + xOffset} y={y} fill={fill} textAnchor={textAnchor} dominantBaseline="central" fontSize={14}>
         {words.map((word, i) => (
@@ -125,10 +147,11 @@ const AnalyticsDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white font-sans flex flex-col">
+      <style>{wordCloudStyles}</style>
       <Navbar />
 
-      <div className="max-w-7xl mx-auto w-full p-6 md:p-10 flex-grow">
-        <div className="flex items-center justify-between mb-10">
+      <div className="max-w-7xl mx-auto w-full px-6 py-2 md:px-10 md:py-4 flex-grow">
+        <div className="flex items-center justify-between mb-1">
           <div>
             <h1 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
               {userName}'s Analytics
@@ -144,25 +167,25 @@ const AnalyticsDashboard = () => {
         </div>
 
         {/* Impact Scorecards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-yellow-500 to-orange-400 rounded-2xl p-6 shadow-xl flex items-center justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="bg-gradient-to-br from-yellow-500 to-orange-400 rounded-2xl py-3 px-5 shadow-xl flex items-center justify-between">
             <div>
-              <p className="text-yellow-100 text-sm font-medium uppercase tracking-wider mb-1">Total Stars Earned</p>
-              <h3 className="text-4xl font-extrabold text-white">{totalStars.toLocaleString()}</h3>
+              <p className="text-yellow-100 text-xs font-semibold uppercase tracking-wider mb-0.5">Total Stars Earned</p>
+              <h3 className="text-3xl font-extrabold text-white">{totalStars.toLocaleString()}</h3>
             </div>
-            <div className="bg-white/20 p-4 rounded-full">
-              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <div className="bg-white/20 p-3 rounded-full">
+              <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-emerald-500 to-teal-400 rounded-2xl p-6 shadow-xl flex items-center justify-between">
+          <div className="bg-gradient-to-br from-emerald-500 to-teal-400 rounded-2xl py-3 px-5 shadow-xl flex items-center justify-between">
             <div>
-              <p className="text-emerald-100 text-sm font-medium uppercase tracking-wider mb-1">Total Forks Accumulated</p>
-              <h3 className="text-4xl font-extrabold text-white">{totalForks.toLocaleString()}</h3>
+              <p className="text-emerald-100 text-xs font-semibold uppercase tracking-wider mb-0.5">Total Forks Accumulated</p>
+              <h3 className="text-3xl font-extrabold text-white">{totalForks.toLocaleString()}</h3>
             </div>
-            <div className="bg-white/20 p-4 rounded-full">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white/20 p-3 rounded-full">
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
             </div>
@@ -170,24 +193,24 @@ const AnalyticsDashboard = () => {
         </div>
 
         {/* Profile Banner & Heatmap Section */}
-        <div className="relative bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden mb-8 shadow-xl">
+        <div className="relative bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden mb-4 shadow-xl">
           {/* Top Banner Ribbon */}
           <div className="h-28 bg-gradient-to-r from-emerald-500 to-teal-400 w-full absolute top-0 left-0 z-0"></div>
-          
+
           <div className="pt-28 px-6 md:px-10 pb-8 flex flex-col xl:flex-row items-center xl:items-start gap-8 relative z-10 bg-gray-800/80 backdrop-blur-sm">
             {/* Avatar Profile */}
             <div className="flex flex-col items-center -mt-16 z-20 xl:w-1/4">
-              <img 
-                src={data.avatarUrl || `https://github.com/${userName}.png`} 
-                alt={userName} 
-                className="w-36 h-36 rounded-full border-4 border-gray-800 bg-gray-900 shadow-2xl object-cover mb-4" 
+              <img
+                src={data.avatarUrl || `https://github.com/${userName}.png`}
+                alt={userName}
+                className="w-36 h-36 rounded-full border-4 border-gray-800 bg-gray-900 shadow-2xl object-cover mb-4"
               />
               <h2 className="text-2xl font-bold text-white text-center">{userName}</h2>
               <a href={`https://github.com/${userName}`} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 text-sm mt-1">
                 View GitHub Profile
               </a>
             </div>
-            
+
             {/* Heatmap Area */}
             <div className="flex-grow w-full overflow-x-auto bg-gray-900/50 rounded-xl p-4 md:p-6 border border-gray-700/50 shadow-inner">
               <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-300">
@@ -212,45 +235,79 @@ const AnalyticsDashboard = () => {
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-          {/* Language Distribution */}
-          <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 shadow-xl flex flex-col">
-            <h2 className="text-xl font-semibold mb-6 flex items-center">
-              <svg className="w-5 h-5 mr-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-              </svg>
-              Language Distribution
-            </h2>
-            <div className="flex-grow min-h-[300px]">
-              {languageData.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart margin={{ top: 20, right: 60, left: 60, bottom: 20 }}>
-                    <Pie
-                      data={languageData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={100}
-                      outerRadius={140}
-                      paddingAngle={5}
-                      dataKey="value"
-                      label={renderCustomizedLabel}
-                    >
-                      {languageData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '0.5rem', color: '#fff' }}
-                      itemStyle={{ color: '#fff' }}
+          {/* Left Column */}
+          <div className="flex flex-col gap-8">
+            {/* Language Distribution */}
+            <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 shadow-xl flex flex-col">
+              <h2 className="text-xl font-semibold mb-3 flex items-center">
+                <svg className="w-5 h-5 mr-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+                Language Distribution
+              </h2>
+              <div className="flex-grow min-h-[400px]">
+                {languageData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart margin={{ top: 0, right: 50, left: 50, bottom: 0 }}>
+                      <Pie
+                        data={languageData}
+                        cx="50%"
+                        cy="45%"
+                        innerRadius={90}
+                        outerRadius={130}
+                        paddingAngle={5}
+                        dataKey="value"
+                        label={renderCustomizedLabel}
+                      >
+                        {languageData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', borderRadius: '0.5rem', color: '#fff' }}
+                        itemStyle={{ color: '#fff' }}
+                      />
+                      <Legend verticalAlign="bottom" height={36} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-500">No language data available</div>
+                )}
+              </div>
+            </div>
+
+            {/* Topics Word Cloud */}
+            <div className="bg-white rounded-2xl p-6 shadow-xl flex flex-col">
+              <h2 className="text-xl font-semibold mb-6 flex items-center text-gray-900">
+                <svg className="w-5 h-5 mr-3 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                Repository Topics
+              </h2>
+              <div className="flex-grow flex items-center justify-center min-h-[250px]">
+                <div className="h-[300px] max-w-[300px] w-full overflow-hidden text-center bg-transparent rounded-2xl p-2 word-cloud-wrapper">
+                  {topicData.length > 0 ? (
+                    <WordCloud
+                      data={topicData}
+                      width={300}
+                      height={300}
+                      font="sans-serif"
+                      fontWeight="bold"
+                      fontSize={fontSizeMapper}
+                      rotate={rotate}
+                      padding={3}
+                      spiral="rectangular"
+                      fill={(d, i) => wordCloudColors[i % wordCloudColors.length]}
                     />
-                    <Legend verticalAlign="bottom" height={36} />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="flex items-center justify-center h-full text-gray-500">No language data available</div>
-              )}
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-gray-500">No topics found across repositories.</div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
+          {/* Right Column */}
           <div className="flex flex-col gap-8">
             {/* Top Starred */}
             <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 shadow-xl flex-grow flex flex-col">
@@ -307,34 +364,6 @@ const AnalyticsDashboard = () => {
                 )}
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Topics Word Cloud */}
-        <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 shadow-xl mt-8">
-          <h2 className="text-xl font-semibold mb-6 flex items-center">
-            <svg className="w-5 h-5 mr-3 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-            </svg>
-            Repository Topics
-          </h2>
-          <div className="h-[400px] max-w-[400px] w-full overflow-hidden text-center mx-auto bg-gray-900/30 rounded-2xl border border-gray-700/50 p-2">
-            {topicData.length > 0 ? (
-              <WordCloud
-                data={topicData}
-                width={400}
-                height={400}
-                font="sans-serif"
-                fontWeight="bold"
-                fontSize={fontSizeMapper}
-                rotate={rotate}
-                padding={3}
-                spiral="rectangular"
-                fill={(d, i) => wordCloudColors[i % wordCloudColors.length]}
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full text-gray-500">No topics found across repositories.</div>
-            )}
           </div>
         </div>
       </div>

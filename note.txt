@@ -1,18 +1,24 @@
-# Word Cloud Optimization and Stability Fixes
+# Dashboard Layout Redesign and Custom Animations
 
-## Dependency Updates
-- Replaced the legacy `react-wordcloud` package with `react-d3-cloud` (`^1.0.6`) in `package.json` and `package-lock.json`. This resolves fatal React 18 StrictMode crashes ("Cannot read properties of undefined (reading '0')") that were breaking the application when rendering the word cloud.
+## General Layout & Whitespace Refinements
+- **Compact Padding**: Reduced the overall vertical whitespace between the primary container and the Navbar (`md:py-10` → `md:py-4`).
+- **Title Gap**: Tightened the margin below the main dashboard title (`mb-2` → `mb-1`).
+- **Section Spacing**: Decreased the margin gaps beneath the Impact Scorecards and the Contribution Heatmap (`mb-6` → `mb-4`) to create a tighter, more cohesive visual hierarchy.
 
-## Word Cloud Layout & Container Refactoring
-- **Container Sizing**: Modified the wrapper element for the Word Cloud in `AnalyticsDashboard.js` from a dynamic `flex` container (which collapsed to 0x0 before measurement, rendering invisibly) to an explicit block display with `h-[400px] max-w-[400px] w-full mx-auto`. This establishes a firm, compact square boundary.
-- **Canvas Scaling**: Set the internal `WordCloud` canvas width and height to explicitly match the container `400x400` aspect ratio.
-- **Spiral Algorithm**: Transitioned the layout algorithm from the default archimedean spiral to `"rectangular"` to achieve optimal density and tight word packing within the square bounding box.
+## Impact Scorecard Sizing
+- **Card Height Optimization**: Greatly reduced the vertical height of the two impact scorecards ("Total Stars" and "Total Forks").
+- **Internal Padding**: Swapped uniform padding (`p-6`) for tightened vertical padding (`py-3 px-5`).
+- **Typography & Iconography**: Shrunk the primary statistic font size (`text-4xl` → `text-3xl`) and scaled down the corresponding SVG icons and their circular wrappers for a sleeker look.
 
-## Custom Rotation Rules Implemented
-- The goal of these rules is to maximize layout density while ensuring multi-word topics remain readable.
-- **Rule 1 (Long Words)**: Topics with a length greater than 6 characters or those containing a hyphen (`-`) are strictly enforced to render horizontally (`0°`).
-- **Rule 2 (Small/Single Words)**: To prevent a sparse, cross-shaped word cloud caused by pushing all small words vertically, small words are now rotated using a deterministic string hashing function based on `charCodeAt`.
-  - The algorithm calculates a hash sum of the characters.
-  - Approximately **70%** of small words are rendered horizontally (`0°`).
-  - The remaining **30%** are rendered vertically (`90°`).
-  - This allows the `react-d3-cloud` layout engine to slot words together closely without long vertical words forcing wide padding gaps.
+## Grid Realignment (Left & Right Columns)
+- **Vertical Chart Grouping**: Refactored the charts section into two distinct flex columns. 
+- **Left Column**: Stacked the `Language Distribution` Pie Chart and `Repository Topics` Word Cloud vertically underneath each other.
+- **Right Column**: Maintained the two bar charts (`Top Starred` and `Most Forked`).
+- **Pie Chart Scaling**: Reduced the inner (`90`) and outer (`130`) radii of the Language Distribution donut chart to neatly fit its new half-width column. Shifted its `cy` anchor to `45%` and adjusted its bottom margins to allocate plenty of clean, uncluttered space for the interactive chart legend at the bottom.
+
+## Repository Topics UI & Word Cloud Animations
+- **White Theme Override**: Restructured the Repository Topics card completely to use a clean, solid white background (`bg-white`) with dark text (`text-gray-900`), removing the previous dark gray wrapper borders.
+- **Palette Update**: Updated `wordCloudColors` to a rich, dark, high-contrast palette (crimson, emerald, navy blue, deep purple) guaranteeing crisp legibility against the white canvas.
+- **Framer Motion & CSS Integration**: Imported `framer-motion` and injected a custom `<style>` block directly into the dashboard.
+- **True Word Vibration**: Implemented a `wordFloat` CSS keyframe animation utilizing `opacity` flickering and shifting `drop-shadows` rather than `transform: scale`, ensuring D3's inline SVG coordinates aren't disrupted.
+- **Staggered Delays**: Applied the animation to the word cloud's `<text>` tags using `nth-child` targeting, generating independent vibration speeds and delays so each individual topic pulses organically.
