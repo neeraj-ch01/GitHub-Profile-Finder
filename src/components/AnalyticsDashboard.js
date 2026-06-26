@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import apiClient from "../services/apiClient";
 import { GitHubCalendar } from "react-github-calendar";
 import { PieChart, Pie, Cell, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+import WordCloud from "react-d3-cloud";
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF19A3', '#19FFD5', '#D5FF19'];
 
@@ -83,11 +84,22 @@ const AnalyticsDashboard = () => {
     .map(([key, value]) => ({ text: key, value }))
     .sort((a, b) => b.value - a.value);
 
+
+
+  // Word Cloud configuration
+  const wordCloudColors = ['#FCA5A5', '#FCD34D', '#86EFAC', '#93C5FD', '#A78BFA', '#F472B6', '#34D399', '#38BDF8'];
   const maxTopicCount = Math.max(...topicData.map(t => t.value), 1);
-  const getFontSize = (value) => {
-    const minSize = 12;
-    const maxSize = 36;
-    return minSize + (value / maxTopicCount) * (maxSize - minSize);
+  const fontSizeMapper = word => Math.floor(12 + (word.value / maxTopicCount) * 20);
+  const rotate = word => {
+    const text = word.text || '';
+    if (text.length > 6 || text.includes('-')) {
+      return 0;
+    }
+    let hash = 0;
+    for (let i = 0; i < text.length; i++) {
+      hash = text.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return Math.abs(hash) % 3 === 0 ? 90 : 0;
   };
 
   const renderCustomizedLabel = ({ x, y, textAnchor, name, percent, fill }) => {
@@ -306,19 +318,22 @@ const AnalyticsDashboard = () => {
             </svg>
             Repository Topics
           </h2>
-          <div className="flex flex-wrap justify-center items-center gap-4 py-8 px-4">
+          <div className="h-[400px] max-w-[400px] w-full overflow-hidden text-center mx-auto bg-gray-900/30 rounded-2xl border border-gray-700/50 p-2">
             {topicData.length > 0 ? (
-              topicData.map((topic, index) => (
-                <span 
-                  key={index} 
-                  className="inline-block px-4 py-2 rounded-full bg-gray-700/50 text-gray-200 border border-gray-600/50 shadow-sm transition-transform hover:scale-110 hover:bg-pink-500/20 hover:text-pink-300 hover:border-pink-500/50 cursor-default"
-                  style={{ fontSize: `${getFontSize(topic.value)}px` }}
-                >
-                  {topic.text}
-                </span>
-              ))
+              <WordCloud
+                data={topicData}
+                width={400}
+                height={400}
+                font="sans-serif"
+                fontWeight="bold"
+                fontSize={fontSizeMapper}
+                rotate={rotate}
+                padding={3}
+                spiral="rectangular"
+                fill={(d, i) => wordCloudColors[i % wordCloudColors.length]}
+              />
             ) : (
-              <div className="text-gray-500">No topics found across repositories.</div>
+              <div className="flex items-center justify-center h-full text-gray-500">No topics found across repositories.</div>
             )}
           </div>
         </div>
