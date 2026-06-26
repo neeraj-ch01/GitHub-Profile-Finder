@@ -7,10 +7,12 @@ import SearchProfiles from './components/SearchProfiles';
 import UserProfile from './components/UserProfile';
 import RepoDetail from './components/RepoDetail';
 import Tutorials from './components/Tutorials';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="App bg-gray-900 text-white min-h-screen font-sans">
         <Routes>
           <Route path="/" element={<HomePage />} />
