@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class AppConfig {
 
-    @Value("${GITHUB_TOKEN:}")
+    @Value("${GITHUB_TOKEN}")
     private String githubToken;
 
     @Bean

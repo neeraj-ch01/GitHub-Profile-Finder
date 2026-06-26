@@ -16,7 +16,7 @@ public class UserDetailsService {
     private WebClient webClient;
 
     public Mono<GithubUserProfileDTO> fetchUserDetails(String userName) {
-        String url = "https://api.github.com/users/" + userName;
+        String url = "/users/" + userName;
         return webClient.get()
                 .uri(url)
                 .retrieve()
@@ -25,7 +25,7 @@ public class UserDetailsService {
     }
 
     public Mono<List<GithubEventDTO>> fetchUserEvents(String userName) {
-        String url = "https://api.github.com/users/" + userName + "/events/public";
+        String url = "/users/" + userName + "/events/public";
         return webClient.get()
                 .uri(url)
                 .retrieve()

@@ -18,7 +18,7 @@ public class GithubRepoDetailsService {
 
     @Autowired
     private WebClient webClient;
-    private final String GITHUB_API_URL = "https://api.github.com/repos/";
+    private final String GITHUB_API_URL = "/repos/";
 
     public Mono<GithubRepoDTO> getRepositoryDetails(String owner, String repo) {
         String url = GITHUB_API_URL + owner + "/" + repo;

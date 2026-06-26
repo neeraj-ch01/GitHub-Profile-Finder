@@ -45,7 +45,7 @@ public class GithubSearchService {
             return Mono.just(new GithubSearchResponseDTO<>());
         }
 
-        URI uri = UriComponentsBuilder.fromUriString("https://api.github.com/search/users")
+        URI uri = UriComponentsBuilder.fromUriString("/search/users")
                 .queryParam("q", query.toString().trim())
                 .queryParam("page", page != null ? page : 1)
                 .queryParam("per_page", size != null ? size : 30)
@@ -63,7 +63,7 @@ public class GithubSearchService {
             return Mono.just(new GithubSearchResponseDTO<>());
         }
 
-        URI uri = UriComponentsBuilder.fromUriString("https://api.github.com/search/repositories")
+        URI uri = UriComponentsBuilder.fromUriString("/search/repositories")
                 .queryParam("q", queryStr.trim())
                 .queryParam("page", page != null ? page : 1)
                 .queryParam("per_page", size != null ? size : 30)
@@ -94,7 +94,7 @@ public class GithubSearchService {
             query.append(" language:").append(language.trim());
         }
 
-        URI uri = UriComponentsBuilder.fromUriString("https://api.github.com/search/repositories")
+        URI uri = UriComponentsBuilder.fromUriString("/search/repositories")
                 .queryParam("q", query.toString())
                 .queryParam("sort", "stars")
                 .queryParam("order", "desc")

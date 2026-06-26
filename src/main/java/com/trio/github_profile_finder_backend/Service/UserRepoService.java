@@ -15,7 +15,7 @@ public class UserRepoService {
     private WebClient webClient;
 
     public Mono<List<GithubRepoDTO>> fetchUserRepositories(String userName) {
-        String url = "https://api.github.com/users/" + userName + "/repos";
+        String url = "/users/" + userName + "/repos";
         return webClient.get()
                 .uri(url)
                 .retrieve()
