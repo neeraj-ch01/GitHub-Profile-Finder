@@ -1,9 +1,15 @@
-fix: add User-Agent header for GitHub API calls
+feat: rate-limiting support 
 
-1. The GithubRepoDTO was missing the owner field, and Jackson (the JSON parser) was throwing a serialization error because it was encountering properties from GitHub's API that it didn't know how to map.
-2. The Spring WebClient was missing a User-Agent header, which the GitHub API strictly requires.
+Load Balancer Support: Added server.forward-headers-strategy=framework to 
+application.properties
 
-Changed done: 
-- Added the missing owner field to GithubRepoDTO.java.
-- Added the @JsonIgnoreProperties(ignoreUnknown = true) annotation to GithubRepoDTO, GithubSearchResponseDTO, and GithubUserProfileDTO so the backend won't fail if GitHub sends extra fields.
-- Added a .defaultHeader("User-Agent", "GithubProfileFinderApp") to the WebClient in GithubSearchService.java to comply with GitHub's API requirements.
+This allows Spring WebFlux to automatically extract the true Client IP injected by Render's proxy.
+
+Rate Limiting Service: Created RateLimitingService.java that uses Caffeine Cache and Bucket4j. 
+
+Implemented two tiers:
+UUID limit: 100 requests per hour.
+IP limit: 600 requests per hour.
+
+Web Filter Interceptor: Created RateLimitWebFilter.java to intercept all /api/ traffic.
+It ensures the request adheres to both the IP bucket limit and the UUID bucket limit before letting the request pass to the controllers.
