@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Navbar from "./common/Navbar";
-import githubService from "../services/githubService";
-import SearchForm from "./search/SearchForm";
-import UserCard from "./search/UserCard";
-import RepositoryCard from "./search/RepositoryCard";
-import Pagination from "./common/Pagination";
-import Footer from "./common/Footer";
+import Navbar from "../common/Navbar";
+import githubService from "../../services/githubService";
+import SearchForm from "./SearchForm";
+import UserCard from "./UserCard";
+import RepositoryCard from "./RepositoryCard";
+import Pagination from "../common/Pagination";
+import Footer from "../common/Footer";
 
 const SearchProfiles = () => {
   const navigate = useNavigate();

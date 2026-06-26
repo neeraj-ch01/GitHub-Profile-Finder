@@ -3,11 +3,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './components/home/HomePage';
-import SearchProfiles from './components/SearchProfiles';
-import UserProfile from './components/UserProfile';
-import RepoDetail from './components/RepoDetail';
-import Tutorials from './components/Tutorials';
-import ScrollToTop from './components/ScrollToTop';
+import SearchProfiles from './components/search/SearchProfiles';
+import UserProfile from './components/profile/UserProfile';
+import RepoDetail from './components/repo/RepoDetail';
+import Tutorials from './components/tutorials/Tutorials';
+import ScrollToTop from './components/common/ScrollToTop';
 import AnalyticsSearch from './components/analytics/AnalyticsSearch';
 import AnalyticsDashboard from './components/analytics/AnalyticsDashboard';
 

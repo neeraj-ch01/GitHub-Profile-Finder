@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import Navbar from "./common/Navbar";
-import githubService from "../services/githubService";
-import LanguagesBreakdown from "./repo/LanguagesBreakdown";
-import ReadmeTab from "./repo/ReadmeTab";
-import CommitsTab from "./repo/CommitsTab";
-import BranchesTab from "./repo/BranchesTab";
-import IssuesTab from "./repo/IssuesTab";
-import Footer from "./common/Footer";
+import Navbar from "../common/Navbar";
+import githubService from "../../services/githubService";
+import LanguagesBreakdown from "./LanguagesBreakdown";
+import ReadmeTab from "./ReadmeTab";
+import CommitsTab from "./CommitsTab";
+import BranchesTab from "./BranchesTab";
+import IssuesTab from "./IssuesTab";
+import Footer from "../common/Footer";
 
 const RepoDetail = () => {
   const { owner, repoName } = useParams();

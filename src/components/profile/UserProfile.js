@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import Navbar from "./common/Navbar";
-import githubService from "../services/githubService";
-import ProfileSidebar from "./profile/ProfileSidebar";
-import ProfileStats from "./profile/ProfileStats";
-import ActivityFeed from "./profile/ActivityFeed";
-import UserRepoCard from "./profile/UserRepoCard";
-import Footer from "./common/Footer";
+import Navbar from "../common/Navbar";
+import githubService from "../../services/githubService";
+import ProfileSidebar from "./ProfileSidebar";
+import ProfileStats from "./ProfileStats";
+import ActivityFeed from "./ActivityFeed";
+import UserRepoCard from "./UserRepoCard";
+import Footer from "../common/Footer";
 
 const UserProfile = () => {
   const { userName } = useParams();
