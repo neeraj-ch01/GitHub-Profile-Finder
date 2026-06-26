@@ -1,0 +1,3 @@
+chore: project cleanup
+
+Removed GitHubFinderResults.js: an obsolete prototype component containing hardcoded dummy data (like an array of users with placeholder images).
