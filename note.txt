@@ -1,18 +1,13 @@
-Enhance Markdown rendering, centralize API client, and fix UI data binding
+fix: Invlide Date issue
 
-This commit introduces several frontend improvements ranging from better 
-Markdown display in repository details to improved API request logging.
+The GitHub API returns dates using the created_at snake_case property. In the Spring Boot backend, DTOs such as GithubEventDTO and GithubIssueDTO define a createdAt field explicitly mapped with @JsonProperty("created_at").
 
-- Added `apiClient.js` to provide a centralized Axios instance with 
-  request and response interceptors for consistent frontend logging.
-- Refactored `authenticationService`, `githubService`, and 
-  `registrationService` to use the new `apiClient`.
-- Implemented Mermaid.js integration to support flowchart and diagram 
-  rendering within GitHub README files. Added responsive CSS rules 
-  to prevent diagrams from distorting layout.
-- Enhanced the Markdown renderer to resolve relative image URLs by 
-  injecting the GitHub `download_url` for raw assets, fixing broken 
-  images in repository READMEs.
-- Fixed a data binding issue in `UserProfile.js` where `public_repos` 
-  was incorrectly referenced as `publicRepos`.
-- Added `mermaid` dependency to `package.json`.
+Jackson uses the @JsonProperty annotation not just for reading data from GitHub, but also when sending the final payload back to the frontend. As a result, the backend forwards the property as "created_at" rather than converting it to "createdAt".
+
+The frontend was attempting to access event.createdAt (in UserProfile.js) and issue.createdAt (in RepoDetail.js). Since those fields were undefined, new Date(undefined) was executed, which directly evaluates to the "Invalid Date" string on the UI.
+Resoved this issue  by updating the frontend to expect the correct snake_case property sent by the backend. This aligns with other existing data mappings in the frontend (like stargazers_count and public_repos)
+
+Changes made:
+
+In src/components/UserProfile.js: Replaced event.createdAt with event.created_at.
+In src/components/RepoDetail.js: Replaced issue.createdAt with issue.created_at.

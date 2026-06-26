@@ -383,7 +383,7 @@ const RepoDetail = () => {
                   </div>
                   <div className="flex items-center space-x-2 text-xs text-gray-400">
                     <span>#{issue.id}</span>
-                    <span>opened on {new Date(issue.createdAt).toLocaleDateString()}</span>
+                    <span>opened on {new Date(issue.created_at).toLocaleDateString()}</span>
                     <span>by</span>
                     {issue.user && (
                       <Link to={`/users/${issue.user.login}`} className="text-gray-300 font-semibold hover:underline">

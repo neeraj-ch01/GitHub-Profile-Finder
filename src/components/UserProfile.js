@@ -45,7 +45,7 @@ const UserProfile = () => {
   const renderEventDescription = (event) => {
     const repoName = event.repo?.name || "unknown/repository";
     const repoLink = `/repos/${repoName}`;
-    const dateStr = new Date(event.createdAt).toLocaleDateString(undefined, {
+    const dateStr = new Date(event.created_at).toLocaleDateString(undefined, {
       month: "short",
       day: "numeric"
     });
