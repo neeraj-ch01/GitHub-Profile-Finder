@@ -32,11 +32,30 @@ public class AnalyticsService {
                     List<GithubRepoDTO> repos = tuple.getT2();
                     
                     Map<String, Integer> languageDistribution = new HashMap<>();
+                    Map<String, Integer> topicDistribution = new HashMap<>();
+                    int totalStars = 0;
+                    int totalForks = 0;
                     
                     for (GithubRepoDTO repo : repos) {
                         String lang = repo.getLanguage();
                         if (lang != null && !lang.trim().isEmpty()) {
                             languageDistribution.put(lang, languageDistribution.getOrDefault(lang, 0) + 1);
+                        }
+
+                        if (repo.getStargazersCount() != null) {
+                            totalStars += repo.getStargazersCount();
+                        }
+
+                        if (repo.getForksCount() != null) {
+                            totalForks += repo.getForksCount();
+                        }
+
+                        if (repo.getTopics() != null) {
+                            for (String topic : repo.getTopics()) {
+                                if (topic != null && !topic.trim().isEmpty()) {
+                                    topicDistribution.put(topic, topicDistribution.getOrDefault(topic, 0) + 1);
+                                }
+                            }
                         }
                     }
 
@@ -50,7 +69,7 @@ public class AnalyticsService {
                             .limit(5)
                             .collect(Collectors.toList());
 
-                    return new GithubAnalyticsDTO(languageDistribution, topStarred, topForked, user.getAvatarUrl());
+                    return new GithubAnalyticsDTO(languageDistribution, topStarred, topForked, user.getAvatarUrl(), totalStars, totalForks, topicDistribution);
                 });
     }
 }

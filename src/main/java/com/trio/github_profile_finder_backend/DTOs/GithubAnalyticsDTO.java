@@ -8,14 +8,20 @@ public class GithubAnalyticsDTO {
     private List<GithubRepoDTO> topStarredRepos;
     private List<GithubRepoDTO> topForkedRepos;
     private String avatarUrl;
+    private Integer totalStars;
+    private Integer totalForks;
+    private Map<String, Integer> topicDistribution;
 
     public GithubAnalyticsDTO() {}
 
-    public GithubAnalyticsDTO(Map<String, Integer> languageDistribution, List<GithubRepoDTO> topStarredRepos, List<GithubRepoDTO> topForkedRepos, String avatarUrl) {
+    public GithubAnalyticsDTO(Map<String, Integer> languageDistribution, List<GithubRepoDTO> topStarredRepos, List<GithubRepoDTO> topForkedRepos, String avatarUrl, Integer totalStars, Integer totalForks, Map<String, Integer> topicDistribution) {
         this.languageDistribution = languageDistribution;
         this.topStarredRepos = topStarredRepos;
         this.topForkedRepos = topForkedRepos;
         this.avatarUrl = avatarUrl;
+        this.totalStars = totalStars;
+        this.totalForks = totalForks;
+        this.topicDistribution = topicDistribution;
     }
 
     public Map<String, Integer> getLanguageDistribution() {
@@ -48,5 +54,29 @@ public class GithubAnalyticsDTO {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public Integer getTotalStars() {
+        return totalStars;
+    }
+
+    public void setTotalStars(Integer totalStars) {
+        this.totalStars = totalStars;
+    }
+
+    public Integer getTotalForks() {
+        return totalForks;
+    }
+
+    public void setTotalForks(Integer totalForks) {
+        this.totalForks = totalForks;
+    }
+
+    public Map<String, Integer> getTopicDistribution() {
+        return topicDistribution;
+    }
+
+    public void setTopicDistribution(Map<String, Integer> topicDistribution) {
+        this.topicDistribution = topicDistribution;
     }
 }

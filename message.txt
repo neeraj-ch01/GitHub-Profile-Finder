@@ -1,0 +1,6 @@
+feat(analytics): implement total impact scorecards and topics word cloud
+
+- Updated `GithubRepoDTO` to capture `topics` array from the GitHub API.
+- Expanded `GithubAnalyticsDTO` to include `totalStars`, `totalForks`, `topicDistribution`, and `avatarUrl`.
+- Refactored `AnalyticsService` to concurrently fetch user details and repositories using `Mono.zip`.
+- Added logic in `AnalyticsService` to aggregate total stars, total forks, and repository topics across all user repositories to power the new frontend scorecards and word cloud.
